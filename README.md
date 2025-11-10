@@ -2,6 +2,8 @@
 
 Hey there 👋🏻 this is my home lab setup.
 
+Peace be the journey 🥂
+
 ---
 
 * [Setup](#setup)
