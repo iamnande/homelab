@@ -5,6 +5,9 @@ Hey there 👋🏻 this is my home lab setup.
 ---
 
 * [Setup](#setup)
+    * [Network](#network)
+        * [Network Infrastructure](#network-infrastructure)
+        * [Network Segmentation](#network-segmentation)
 
 ## Setup
 
@@ -67,14 +70,15 @@ graph TD
 #### Network Segmentation
 
 The network is segmented into seven VLANs, each with a dedicated subnet for
-isolation and management. VLAN 1 is reserved for network management, while
-Home (20) and Lab (30) VLANs provide general-purpose spaces. Work (50),
-IoT (40), and Guest (60) VLANs are strictly isolated, providing only filtered
-internet access. All DNS traffic from every VLAN is resolved through DoH via
-ControlD, with the gateway serving morethq.com internally. Service VLAN (70)
-supports auxiliary infrastructure or specialized services. This structure
-enforces security boundaries and ensures consistent DNS filtering across all
-segments.
+isolation and management. Work (50), IoT (40), and Guest (60) VLANs are
+strictly isolated, providing only filtered internet access.
+
+All DNS traffic resolves through DoH via ControlD, with the gateway serving
+morethq.com internally (split-horizon FTW 🤘).
+
+The Service VLAN (70) ultimately serves as our internal production environment.
+If things break here - we lose things like media streaming, home automation,
+and cold storage sync (mobile photo sync to home network).
 
 <details open>
     <summary>Network Segmentation Diagram</summary>
