@@ -1,67 +1,119 @@
-# MHQ Home Lab
+# homelab
 
-Hey there 👋🏻 this is my home lab setup.
+hey there 👋🏻 this is my home lab. there are many like it, but this one is mine.
 
-Peace be the journey 🥂
+[peace be the journey](https://youtu.be/fu_6DXHut-Y?si=fUSLJ6zVKgsiiDO_) 🥂
 
----
+* [overview](#overview)
+* [architecture](#architecture)
+    * [networking](#networking)
 
-* [Setup](#setup)
-    * [Network](#network)
-        * [Network Infrastructure](#network-infrastructure)
-        * [Network Segmentation](#network-segmentation)
+## overview
 
-## Setup
+homelab is here to support a few key items:
 
-### Network
+1. 🧪 **experimentation & learning**: i love tinkering - especially
+with networking, platform services, and distributed systems; deployed and 
+managed securely with automation at every step.
 
-#### Network Infrastructure
+1. 🏠 **service enablement**: my ultimate goal is to remove any dependency on
+faang at both hardware and software levels. i want freedom, privacy, 
+control over our digital footprint - all while staying within the realm of
+legit, sustainable tech.
 
-* Modem: ARRIS - SURFboard SB6183
-* Gateway: UniFi Cloud Gateway Ultra
-* Switch: UniFi Lite 8 PoE
-* Access Points (APs):
-    * (2) UniFi U6 In-Wall
+1. 🏗️ **enterprise simulation**: ever tried homemade chicken wings after going
+to [fire on the mountain](https://www.portlandwings.com/)? it's "okay" - sure -
+but it is absolutely not the same. this setup lets me practice enterprise-style
+patterns at home that would otherwise be atypical in a home environment.
+
+anywho. it's a mix of learning, building useful stuff, practicing for the real
+world, and reclaiming digital independence - all while keepint it fun
+(🤞🏼).
+
+## architecture
+
+the lab is designed for safe experimentation with enterprise patterns.
+everything flows through the gateway, giving a single point to enforce
+segmentation, policies, and observability.
+
+core elements:
+
+* networking: vlans, routing, dns, and firewall logic.
+* security model: trust zones, least-privileged policies,
+* compute & storage: servers, vms, containers, and storage strategy.
+* service catalog: public and internal services, tls strategy, and automation.
+
+the idea here is to show not just "what" exists, but why things are arranged
+the way they are, the trade-offs, and how they enable experimentation,
+autonomy, and enterprise-style patterns at home.
+
+### networking
+
+networking is the unsung hero and backbone of the lab.
+
+key design decisions and trade-offs:
+
+* 🛡️ **segmentation first:** each network is isolated by purpose, with
+default-deny between zones, to reduce blast radius and enforce least-privilege
+access.
+
+* 🌐 **split-horizon dns:** internal resolution allows private names like
+`gateway.morethq.com` to resolve while public services resolve via controld
+using dns-over-https (doh).
+
+* 🕵️‍♂️ **vpn for outbound traffic:** all traffic leaving the lab routes through
+proton vpn to preserve privacy.  
+
+* 🏗️ **enterprise patterns at home:** over-segmentation, strict firewalling, and
+TLS coverage create a safe, realistic playground.
+
+#### network infrastructure
+
+* modem: arris - surfboard sb6183
+* gateway: unifi cloud gateway ultra
+* switch: unifi lite 8 poe
+* access points:
+    * (2) unifi u6 in-wall
 
 <details open>
-    <summary>Network Infrastructure Diagram</summary>
+    <summary>network infrastructure diagram</summary>
 
 ```mermaid
 graph TD
 
     %% --- Core network path ---
-    Internet["🌐 Internet"]
-    Modem["ARRIS SURFboard SB6183<br/>(Modem)"]
-    Gateway["UniFi Cloud Gateway Ultra<br/>(Gateway)"]
-    Switch["UniFi Lite 8 PoE<br/>(Switch)"]
+    internet["🌐 internet"]
+    modem["arris surfboard sb6183<br/>(modem)"]
+    gateway["unifi cloud gateway ultra<br/>(gateway)"]
+    switch["unifi lite 8 poe<br/>(switch)"]
 
-    Internet --> Modem --> Gateway --> Switch
+    internet --> modem --> gateway --> switch
 
-    %% --- Downstairs ---
-    subgraph Downstairs
-        AP_Down["U6 In-Wall<br/>(Downstairs AP)"]
-        ClientD1["Smart TV"]
-        ClientD2["Game Console"]
-        ClientD3["IoT Devices"]
+    %% --- downstairs ---
+    subgraph downstairs
+        ap_down["u6 in-wall<br/>(downstairs ap)"]
+        client_d1["smart tv"]
+        client_d2["game console"]
+        client_d3["iot devices"]
     end
 
-    Switch --> AP_Down
-    AP_Down -.-> ClientD1
-    AP_Down -.-> ClientD2
-    AP_Down -.-> ClientD3
+    switch --> ap_down
+    ap_down -.-> client_d1
+    ap_down -.-> client_d2
+    ap_down -.-> client_d3
 
-    %% --- Upstairs ---
-    subgraph Upstairs
-        AP_Up["U6 In-Wall<br/>(Upstairs AP)"]
-        ClientU1["Laptop / Workstation"]
-        ClientU2["Phone / Tablet"]
-        ClientU3["Printer / IoT Hub"]
+    %% --- upstairs ---
+    subgraph upstairs
+        ap_up["u6 in-wall<br/>(upstairs ap)"]
+        client_u1["laptop / workstation"]
+        client_u2["phone / tablet"]
+        client_u3["iot hub"]
     end
 
-    Switch --> AP_Up
-    AP_Up -.-> ClientU1
-    AP_Up -.-> ClientU2
-    AP_Up -.-> ClientU3
+    switch --> ap_up
+    ap_up -.-> client_u1
+    ap_up -.-> client_u2
+    ap_up -.-> client_u3
 
     %% --- Legend ---
     classDef wired stroke-width:2px,stroke:#333;
@@ -69,68 +121,108 @@ graph TD
 ```
 </details>
 
-#### Network Segmentation
+#### network segmentation
 
-The network is segmented into seven VLANs, each with a dedicated subnet for
-isolation and management. Work (50), IoT (40), and Guest (60) VLANs are
-strictly isolated, providing only filtered internet access.
+the network is segmented into 6 trust zones, with a default of deny. there are
+currently 7 vlans, each with their own subnet.
 
-All DNS traffic resolves through DoH via ControlD, with the gateway serving
-morethq.com internally (split-horizon FTW 🤘).
+zones:
 
-The Service VLAN (70) ultimately serves as our internal production environment.
-If things break here - we lose things like media streaming, home automation,
-and cold storage sync (mobile photo sync to home network).
+| zone       | associated vlans      | description                            |
+| ---------- | --------------------- | -------------------------------------- |
+| internal   | 1, 20, 30, 40, 50, 70 | trusted internal networks              |
+| external   | wan 1, wan 2, vpn-xx  | internet uplinks and vpn clients       |
+| gateway    | gateway               | gateway; enforces firewall rules       |
+| vpn        | tbd                   | vpn servers; encrypted inbound traffic |
+| hotspot    | 60                    | guest Wi-Fi; internet-only access      |
+| dmz        | tbd                   | future public zone; extreme isolation  |
+
+
+vlans:
+
+| vlan | purpose    | subnet         | notes                                  |
+| ---- | ---------- | -------------- | -------------------------------------- |
+| 1    | management | 172.16.0.0/24  | gateway, aps                           |
+| 20   | home       | 172.16.20.0/24 | personal devices                       |
+| 30   | lab        | 172.16.30.0/24 | experimental services, containers      |
+| 40   | iot        | 172.16.40.0/24 | smart devices, internet-only, isolated |
+| 50   | work       | 172.16.50.0/24 | work device, internet-only, isolated   |
+| 60   | guest      | 172.16.60.0/24 | guest wifi, internet-only, isolated    |
+| 70   | service    | 172.16.70.0/24 | internal production apps, media, sync  |
+
+* all outbound traffic goes through proton vpn via udp.
+* all dns queries go through controld via doh.
+* vlans 40 (iot), 50 (work), and 60 (guest) are strictly internet-only,
+entirely isolated from internal resources.
+* vlans 1 (mgmt), 20 (home), 30 (lab), and 70 (service) have internal routing
+as needed.
 
 <details open>
-    <summary>Network Segmentation Diagram</summary>
+    <summary>network segmentation diagram</summary>
 
 ```mermaid
 graph TD
 
-%% --- Core Gateway ---
-    Gateway["UniFi Cloud Gateway Ultra<br/>(Gateway)"]
+    %% --- core gateway ---
+    gateway["unifi cloud gateway ultra<br/>(gateway zone)"]
 
-%% --- VLAN Subnets ---
-    VLAN1["VLAN 1: Management<br/>172.16.0.0/24"]
-    VLAN20["VLAN 20: Home<br/>172.16.20.0/24"]
-    VLAN30["VLAN 30: Lab<br/>172.16.30.0/24"]
-    VLAN40["VLAN 40: IoT<br/>172.16.40.0/24"]
-    VLAN50["VLAN 50: Work<br/>172.16.50.0/24"]
-    VLAN60["VLAN 60: Guest<br/>172.16.60.0/24"]
-    VLAN70["VLAN 70: Service<br/>172.16.70.0/24"]
+    %% --- internal zone ---
+    subgraph internal["internal zone"]
+        vlan_1["vlan 1: management<br/>172.16.0.0/24"]
+        vlan_20["vlan 20: home<br/>172.16.20.0/24"]
+        vlan_30["vlan 30: lab<br/>172.16.30.0/24"]
+        vlan_40["vlan 40: iot<br/>172.16.40.0/24"]
+        vlan_50["vlan 50: work<br/>172.16.50.0/24"]
+        vlan_70["vlan 70: service<br/>172.16.70.0/24"]
+    end
 
-%% --- Gateway Connections ---
-    Gateway --> VLAN1
-    Gateway --> VLAN20
-    Gateway --> VLAN30
-    Gateway --> VLAN40
-    Gateway --> VLAN50
-    Gateway --> VLAN60
-    Gateway --> VLAN70
+    %% --- hotspot zone ---
+    subgraph hotspot["hotspot zone"]
+        vlan_60["vlan 60: guest<br/>172.16.60.0/24"]
+    end
 
-%% --- Internet / DNS ---
-    Internet["🌐 Internet"]
-    DoH["DoH: ControlD<br/>All VLANs"]
+    %% --- vpn zone ---
+    subgraph vpn["vpn zone"]
+        vlan_80["vlan 80: vpn (planned)"]
+    end
 
-    VLAN1 --> DoH
-    VLAN20 --> DoH
-    VLAN30 --> DoH
-    VLAN40 --> DoH
-    VLAN50 --> DoH
-    VLAN60 --> DoH
-    VLAN70 --> DoH
-    DoH --> Internet
+    %% --- external zone ---
+    subgraph external["external zone"]
+        wan1["wan 1"]
+        wan2["wan 2"]
+        vpn_us["vpn-us"]
+        vpn_xx["vpn-xx"]
+    end
+
+    %% --- dmz zone ---
+    subgraph dmz["dmz zone (planned)"]
+        dmz_net["dmz network"]
+    end
+
+    %% --- gateway connections ---
+    gateway --> internal
+    gateway --> hotspot
+    gateway --> vpn
+    gateway --> external
+    gateway --> dmz
+
+    %% --- internet / dns ---
+    internet["🌐 internet"]
+    doh["doh: controld<br/>all vlans"]
+
+    vlan_1 --> doh
+    vlan_20 --> doh
+    vlan_30 --> doh
+    vlan_40 --> doh
+    vlan_50 --> doh
+    vlan_60 --> doh
+    vlan_70 --> doh
+    vlan_80 --> doh
+    doh --> internet
 
 %% --- Isolation Notes ---
     classDef isolated fill:#AA2525,stroke:#f00,stroke-width:2px;
-    class VLAN40,VLAN50,VLAN60 isolated
+    class vlan_40,vlan_50,vlan_60 isolated
 ```
 
-_NOTE:_
-* All outbound traffic from the network is routed via Proton VPN via UDP.
-* All DNS queries from all VLANs go through ControlD DoH.
-* VLANs 40 (IoT), 50 (Work), and 60 (Guest) are internet-only and isolated from internal resources.
-* Home, Lab, and Service VLANs can reach other internal resources as needed.
-* VLAN 1 handles network management and serves morethq.com internally.
 </details>
