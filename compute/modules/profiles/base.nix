@@ -38,6 +38,10 @@
   # programs
   programs.fish.enable = true;
 
+  # security
+  security.pam.sshAgentAuth.enable = true;
+  security.sudo.wheelNeedsPassword = false;
+
   # services
   services.openssh.enable = true;
   services.qemuGuest.enable = true;

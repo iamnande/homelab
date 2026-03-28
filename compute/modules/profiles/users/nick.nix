@@ -4,7 +4,6 @@
     description = "nick";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
-    initialPassword = "super-karate-monkey-death-car";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICoS4wfDQv3PLZYHJw668tS9zhvH73g3EgThK31wBjU0"
     ];
