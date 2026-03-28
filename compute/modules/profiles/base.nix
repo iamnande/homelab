@@ -1,13 +1,10 @@
-{ config, pkgs, ... }:
-{
-  imports = [ ./hardware-configuration.nix ];
+{ pkgs, ... }: {
 
   # boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   # network
-  networking.hostName = "ifrit";
   networking.networkmanager.enable = true;
 
   # locale
@@ -36,7 +33,7 @@
     htop
     jq
     lsof
-    neofetch
+    fastfetch
     nh
     nix-tree
     ripgrep
