@@ -1,22 +1,47 @@
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
 
-    # lsps - helix picks these up from PATH automatically
-    nil                       # nix
-    bash-language-server      # shell scripts
-    gopls                     # go
-    rust-analyzer             # rust
-    typescript-language-server # typescript / javascript
+    # lsps
+    nil
+    bash-language-server
+    gopls
+    rust-analyzer
+    typescript-language-server
+    terraform-ls
+    helm-ls
+    yaml-language-server
 
-    # formatters helix delegates to
-    nixfmt                    # nix
-    nodePackages.prettier      # ts/js/css/html/json
-    rustfmt                   # rust
+    # language runtimes
+    go
+    rustc
+    cargo
+    clippy
+    bun
 
-    # dev tooling
-    devenv                    # per-project shells (language runtimes live here)
-    gh                        # github cli
-    tokei                     # code stats
+    # language tools
+    cargo-nextest
+    golangci-lint
+    bazelisk
+
+    # formatters
+    nixfmt
+    rustfmt
+    biome
+
+    # infra
+    opentofu
+    tflint
+    helm
+    kubectl
+    kubie
+    k9s
+
+    # dev tools
+    jujutsu
+    gh
+    difftastic
+    just
+    xh
 
   ];
 }

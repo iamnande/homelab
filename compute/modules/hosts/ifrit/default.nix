@@ -1,9 +1,11 @@
-{ ... }: {
+{ self, inputs, ... }: {
   imports = [
-    ../../profiles/base.nix
-    ../../profiles/vm-hardware.nix
-    ../../profiles/dev.nix
-    ./hardware.nix
+    inputs.disko.nixosModules.disko
+    self.nixosModules.base
+    self.nixosModules.vmHardware
+    self.nixosModules.dev
+    self.nixosModules.userNick
+    self.nixosModules.diskVmStandard
   ];
 
   networking.hostName = "ifrit";

@@ -11,17 +11,23 @@
   };
 
   outputs = { self, nixpkgs, disko, ... }@inputs: {
+
+    nixosModules = {
+      base        = ./modules/profiles/base.nix;
+      vmHardware  = ./modules/profiles/vm-hardware.nix;
+      dev         = ./modules/profiles/dev.nix;
+      userNick    = ./modules/profiles/users/nick.nix;
+      diskVmStandard = ./modules/disk/vm-standard.nix;
+    };
+
     nixosConfigurations = {
 
-      # initial vm - manually provisioned, uuid-based disk config
       ifrit = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs self; };
         modules = [ ./modules/hosts/ifrit/default.nix ];
       };
 
-      # k3s worker nodes added in a future session
-      # worker-01 = ...
-
     };
+
   };
 }

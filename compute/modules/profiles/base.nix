@@ -3,6 +3,7 @@
   # boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.tmp.useTmpfs = true;
 
   # network
   networking.networkmanager.enable = true;
@@ -11,22 +12,13 @@
   time.timeZone = "America/Los_Angeles";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # user
-  users.users.nick = {
-    isNormalUser = true;
-    description = "nick";
-    extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.fish;
-  };
-
   # packages
   nixpkgs.config.allowUnfree = true;
+  environment.enableAllTerminfo = true;
   environment.systemPackages = with pkgs; [
     btop
     curl
     fd
-    fish
-    fishPlugins.tide
     git
     gnumake
     helix
@@ -34,14 +26,13 @@
     jq
     lsof
     fastfetch
+    fish
     nh
     nix-tree
     ripgrep
-    stow
     tree
     unzip
     wget
-    zellij
   ];
 
   # programs
@@ -49,8 +40,13 @@
 
   # services
   services.openssh.enable = true;
+  services.qemuGuest.enable = true;
+
+  # swap
+  zramSwap.enable = true;
 
   # nix
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.trusted-users = [ "root" "@wheel" ];
   system.stateVersion = "25.11";
 }

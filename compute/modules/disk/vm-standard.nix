@@ -1,7 +1,4 @@
 {
-  # disk layout for a standard proxmox vm
-  # virtio scsi controller -> /dev/sda
-  # matches ifrit's partition shape: efi boot + btrfs with subvolumes
   disko.devices = {
     disk = {
       main = {
@@ -28,6 +25,14 @@
                 subvolumes = {
                   "@" = {
                     mountpoint = "/";
+                    mountOptions = [ "compress=zstd" "noatime" ];
+                  };
+                  "@nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = [ "compress=zstd" "noatime" ];
+                  };
+                  "@var" = {
+                    mountpoint = "/var";
                     mountOptions = [ "compress=zstd" "noatime" ];
                   };
                   "@home" = {
