@@ -17,12 +17,12 @@
 
   outputs = { self, nixpkgs, disko, ... }@inputs: {
 
-    nixosModules = {
-      base        = ./modules/profiles/base.nix;
-      vmHardware  = ./modules/profiles/vm-hardware.nix;
-      dev         = ./modules/profiles/dev.nix;
-      userNick    = ./modules/profiles/users/nick.nix;
-      diskVmStandard = ./modules/disk/vm-standard.nix;
+    mhq = {
+      base       = ./modules/base.nix;
+      dev        = ./modules/dev.nix;
+      vm.proxmox = ./modules/vm/proxmox.nix;
+      users.nick = ./modules/users/nick.nix;
+      disk.btrfs = ./modules/disk/btrfs.nix;
     };
 
     nixosConfigurations = {
