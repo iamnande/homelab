@@ -8,5 +8,5 @@
     self.nixosModules.diskVmStandard
   ];
 
-  networking.hostName = "ifrit";
+  networking.hostName = "devbox-nick";
 }

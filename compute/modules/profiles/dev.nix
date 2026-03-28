@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }: {
   environment.systemPackages = with pkgs; [
 
     # lsps
@@ -42,6 +42,9 @@
     difftastic
     just
     xh
+
+    # ai tools
+    inputs.claude-code-nix.packages.${pkgs.system}.default
 
   ];
 }

@@ -8,6 +8,11 @@
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    claude-code-nix = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, disko, ... }@inputs: {
@@ -22,9 +27,9 @@
 
     nixosConfigurations = {
 
-      ifrit = nixpkgs.lib.nixosSystem {
+      devbox-nick = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs self; };
-        modules = [ ./modules/hosts/ifrit/default.nix ];
+        modules = [ ./modules/hosts/devbox-nick/default.nix ];
       };
 
     };
