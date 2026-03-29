@@ -40,10 +40,10 @@
 
   # security
   security.pam.sshAgentAuth.enable = true;
-  security.sudo.wheelNeedsPassword = false;
 
   # services
   services.openssh.enable = true;
+  services.openssh.settings.PasswordAuthentication = false;
   services.qemuGuest.enable = true;
 
   # swap
