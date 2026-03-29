@@ -49,15 +49,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1774805031,
-        "narHash": "sha256-Ii8a8zYG2xdCsPFLswVgougK2x63TPyH3Qg2rTy6rGU=",
+        "lastModified": 1774805699,
+        "narHash": "sha256-BAsbTUYgBqKClfDiFHeCMLgxNfhAmGMMorhht3E+UoE=",
         "owner": "iamnande",
         "repo": "dotfiles",
-        "rev": "687cd5dd86c773e7621d5330d6906e1d604cd8c4",
+        "rev": "94488e0ae1976f377440df1edc053876c018166b",
         "type": "github"
       },
       "original": {
         "owner": "iamnande",
+        "ref": "feat/4_claude-hm-migration",
         "repo": "dotfiles",
         "type": "github"
       }

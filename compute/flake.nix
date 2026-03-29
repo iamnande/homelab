@@ -20,7 +20,7 @@
     };
 
     dotfiles = {
-      url = "github:iamnande/dotfiles";
+      url = "github:iamnande/dotfiles/feat/4_claude-hm-migration";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
