@@ -1,11 +1,11 @@
 { self, inputs, ... }: {
   imports = [
     inputs.disko.nixosModules.disko
-    self.mhq.base
-    self.mhq.vm.proxmox
-    self.mhq.dev
-    self.mhq.users.nick
-    self.mhq.disk.btrfs
+    self.nixosModules.base
+    self.nixosModules.vm.proxmox
+    self.nixosModules.dev
+    self.nixosModules.users.nick
+    self.nixosModules.disk.btrfs
   ];
 
   networking.hostName = "devbox-nick";

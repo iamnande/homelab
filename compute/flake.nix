@@ -22,7 +22,7 @@
 
   outputs = { self, nixpkgs, disko, home-manager, ... }@inputs: {
 
-    mhq = {
+    nixosModules = {
       base       = ./modules/base.nix;
       dev        = ./modules/dev.nix;
       vm.proxmox = ./modules/vm/proxmox.nix;
