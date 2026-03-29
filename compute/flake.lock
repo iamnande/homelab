@@ -49,16 +49,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1774766454,
+        "lastModified": 1774767241,
         "narHash": "sha256-HDumwvBOTZ1/MejUvxYNH1ttPcAxSed+tk07NzXI0VE=",
         "owner": "iamnande",
         "repo": "dotfiles",
-        "rev": "75a61ca6f0cfb37d2d5324dd89881870159909c3",
+        "rev": "a07bca5b899a60bcb3753488c119498280324557",
         "type": "github"
       },
       "original": {
         "owner": "iamnande",
-        "ref": "feat/4_home-manager-flake-scaffold",
         "repo": "dotfiles",
         "type": "github"
       }
