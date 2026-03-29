@@ -43,11 +43,6 @@
         modules = [ ./modules/hosts/devbox-nick/default.nix ];
       };
 
-      devbox-validation = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs self; };
-        modules = [ ./modules/hosts/devbox-validation/default.nix ];
-      };
-
       lab-endurance-core-01 = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs self; };
         modules = [ ./modules/hosts/lab-endurance-core-01/default.nix ];

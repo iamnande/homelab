@@ -55,7 +55,7 @@ the proxmox tower is plugged directly into the gateway on a dedicated lab port.
 ### compute
 
 nixos vms on proxmox, managed via a nix flake with composable modules.
-currently one active devbox (`devbox-nick`). k3s cluster next.
+active nodes: `devbox-nick` (devbox), `lab-endurance-core-01` (k3s control plane).
 
 → [compute/README.md](compute/README.md)
 
@@ -88,3 +88,35 @@ tbd.
 tbd.
 
 → [storage/README.md](storage/README.md)
+
+---
+
+## naming convention
+
+nodes follow `<env>-<class>[-<descriptor>]-<n>`.
+
+**env** — network environment:
+
+| value | vlan | description |
+|---|---|---|
+| `lab` | 30 | experimentation, non-production workloads |
+| `svc` | 70 | production services |
+| `home` | — | trusted personal devices (NUC, etc.) |
+| `mgmt` | — | management plane |
+| `iot` | — | IoT and sensor devices |
+
+**class** — Interstellar-themed node archetype:
+
+| class | reference | role |
+|---|---|---|
+| `endurance` | the mothership | control plane / cluster server |
+| `ranger` | mission shuttle | worker / agent nodes |
+| `lander` | surface craft | standalone / isolated nodes |
+| `tars` | all-purpose robot | storage |
+| `case` | specialized robot | edge / RPi / IoT |
+
+**descriptor** — expected, optional. required when two nodes of the same class serve different stacks or purposes (e.g. `lab-ranger-core-01` vs `lab-ranger-media-01`).
+
+**n** — zero-padded integer (`01`, `02`, ...).
+
+examples: `lab-endurance-core-01`, `lab-ranger-core-01`, `iot-case-garden-01`, `home-lander-origin-01`
