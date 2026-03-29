@@ -20,7 +20,8 @@
     };
 
     dotfiles = {
-      url = "github:iamnande/dotfiles";
+      # TODO: update to github:iamnande/dotfiles after dotfiles#7 merges
+      url = "github:iamnande/dotfiles/feat/4_home-manager-flake-scaffold";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
