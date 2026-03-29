@@ -49,16 +49,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1774804758,
+        "lastModified": 1774805031,
         "narHash": "sha256-Ii8a8zYG2xdCsPFLswVgougK2x63TPyH3Qg2rTy6rGU=",
         "owner": "iamnande",
         "repo": "dotfiles",
-        "rev": "de1901444879b03939841eeac3839185c92989e0",
+        "rev": "687cd5dd86c773e7621d5330d6906e1d604cd8c4",
         "type": "github"
       },
       "original": {
         "owner": "iamnande",
-        "ref": "feat/4_helix-hm-migration",
         "repo": "dotfiles",
         "type": "github"
       }
