@@ -19,6 +19,8 @@
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
+  # dotfiles flake — expands as stow components migrate to home-manager
+  home-manager.sharedModules = [ inputs.dotfiles.homeManagerModules.nick ];
 
   home-manager.users.nick = { pkgs, ... }: {
     home.stateVersion = "25.11";
@@ -38,7 +40,7 @@
       };
     };
 
-    # clone and install dotfiles on first login — temporary until dotfiles is a home-manager flake
+    # clone and stow remaining dotfiles components not yet migrated to home-manager
     systemd.user.services.dotfiles-setup = {
       Unit.Description = "clone and install dotfiles";
       Service = {
@@ -51,7 +53,7 @@
           if [ ! -d "$HOME/dotfiles" ]; then
             git clone https://github.com/iamnande/dotfiles.git "$HOME/dotfiles"
             cd "$HOME/dotfiles"
-            make fish && make gitconfig && make helix && make zellij && make claude
+            make fish && make helix && make zellij && make claude
           fi
         ''}";
       };
