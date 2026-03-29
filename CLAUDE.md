@@ -25,17 +25,15 @@ README first.
 
 ## compute flake conventions
 
-the compute flake uses a custom `mhq` output (not `nixosModules`) for all shared modules.
-note: `mhq` is non-standard and triggers a `nix flake check` warning. a rename to
-`nixosModules` is pending — don't add new references to `mhq` expecting it to stay.
+the compute flake uses `nixosModules` for all shared modules.
 modules follow `<class>.<type>` namespacing:
 
 ```
-mhq.base           — every host
-mhq.dev            — dev toolchain
-mhq.vm.proxmox     — proxmox vm hardware
-mhq.users.nick     — nick's user config
-mhq.disk.btrfs     — btrfs disk layout
+nixosModules.base           — every host
+nixosModules.dev            — dev toolchain
+nixosModules.vm.proxmox     — proxmox vm hardware
+nixosModules.users.nick     — nick's user config
+nixosModules.disk.btrfs     — btrfs disk layout
 ```
 
 when adding modules, follow the existing pattern:
