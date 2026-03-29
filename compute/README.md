@@ -30,15 +30,16 @@ modules/
 
 ## module system
 
-modules are registered under `mhq` in `flake.nix` using `<class>.<type>` namespacing:
+modules are registered under `nixosModules` in `flake.nix` using `<class>.<type>` namespacing:
 
 ```nix
-mhq = {
+nixosModules = {
   base       = ./modules/base.nix;
   dev        = ./modules/dev.nix;
   vm.proxmox = ./modules/vm/proxmox.nix;
   users.nick = ./modules/users/nick.nix;
   disk.btrfs = ./modules/disk/btrfs.nix;
+  k3s.server = ./modules/k3s/server.nix;
 };
 ```
 
@@ -47,11 +48,11 @@ a host composes what it needs:
 ```nix
 imports = [
   inputs.disko.nixosModules.disko
-  self.mhq.base
-  self.mhq.vm.proxmox
-  self.mhq.dev
-  self.mhq.users.nick
-  self.mhq.disk.btrfs
+  self.nixosModules.base
+  self.nixosModules.vm.proxmox
+  self.nixosModules.dev
+  self.nixosModules.users.nick
+  self.nixosModules.disk.btrfs
 ];
 ```
 
@@ -62,9 +63,10 @@ alongside future `bare-metal.nuc`, `bare-metal.pi5`, or whatever comes next.
 
 ## hosts
 
-| hostname     | profile           | memory | status |
-| ------------ | ----------------- | ------ | ------ |
-| devbox-nick  | base + dev + nick | 8GB    | active |
+| hostname                | profile                      | vcpu | memory | status      |
+| ----------------------- | ---------------------------- | ---- | ------ | ----------- |
+| devbox-nick             | base + dev + nick            | 4    | 8GB    | active      |
+| lab-endurance-core-01   | base + k3s.server + nick     | 6    | 8GB    | provisioning |
 
 ---
 
@@ -79,13 +81,9 @@ alongside future `bare-metal.nuc`, `bare-metal.pi5`, or whatever comes next.
 | bios            | ovmf (uefi), efi disk on local-btrfs, no pre-enrolled keys |
 | scsi controller | virtio scsi single                                         |
 | qemu agent      | enabled                                                    |
+| cpu type        | host                                                       |
 | disk            | 50GB scsi0, local-btrfs, write-back cache                  |
-| cpu             | 2 sockets × 4 cores                                        |
-| memory          | 8GB (devboxen), 4GB (k3s nodes)                            |
-| network         | vmbr0, virtio (paravirtualized), no vlan tag               |
-
-> no vlan tag needed — the proxmox tower is on a switch access port tagged as lab
-> (vlan 30). the switch handles vlan assignment; vms get untagged traffic on vlan 30.
+| network         | vmbr0, virtio (paravirtualized), vlan tag per host         |
 
 boot order on creation: `ide2 (iso) → scsi0 → net0`
 
@@ -94,10 +92,10 @@ boot order on creation: `ide2 (iso) → scsi0 → net0`
 boot the vm, then in the noVNC console set a root password:
 
 ```bash
-sudo passwd root
+passwd root
 ```
 
-grab the ip from unifi client list or `ip addr show`.
+grab the ip from `ip addr show` or the unifi client list.
 
 ### 3. install
 
