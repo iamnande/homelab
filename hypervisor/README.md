@@ -19,7 +19,7 @@ GPU is a passthrough candidate for future workloads (gaming VM, ML).
 | vm | vcpu | ram | disk | vlan | role |
 |---|---|---|---|---|---|
 | devbox-nick | 4 (2s×2c) | 8GB | — | 30 | personal devbox |
-| k3s-1 | 6 (1s×6c) | 8GB | 40GB | 30 | k3s single-node cluster |
+| lab-endurance-core-01 | 6 (1s×6c) | 8GB | 40GB | 30 | k3s control plane |
 
 ## capacity
 

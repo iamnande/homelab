@@ -8,5 +8,5 @@
     self.nixosModules.k3s.server
   ];
 
-  networking.hostName = "k3s-1";
+  networking.hostName = "lab-endurance-core-01";
 }
