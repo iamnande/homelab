@@ -9,13 +9,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     claude-code-nix = {
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, disko, ... }@inputs: {
+  outputs = { self, nixpkgs, disko, home-manager, ... }@inputs: {
 
     mhq = {
       base       = ./modules/base.nix;

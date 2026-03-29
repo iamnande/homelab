@@ -1,4 +1,6 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }: {
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
+
   users.users.nick = {
     isNormalUser = true;
     description = "nick";
@@ -14,4 +16,46 @@
     stow
     zellij
   ];
+
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+
+  home-manager.users.nick = { pkgs, ... }: {
+    home.stateVersion = "25.11";
+
+    programs.ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+      matchBlocks = {
+        "*" = {
+          addKeysToAgent = "yes";
+          forwardAgent = true;
+          serverAliveInterval = 180;
+        };
+        "172.16.*.*" = {
+          extraOptions.StrictHostKeyChecking = "accept-new";
+        };
+      };
+    };
+
+    # clone and install dotfiles on first login — temporary until dotfiles is a home-manager flake
+    systemd.user.services.dotfiles-setup = {
+      Unit.Description = "clone and install dotfiles";
+      Service = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        Restart = "on-failure";
+        RestartSec = "5s";
+        Environment = "PATH=${pkgs.git}/bin:${pkgs.gnumake}/bin:${pkgs.stow}/bin:${pkgs.bash}/bin:/run/current-system/sw/bin";
+        ExecStart = "${pkgs.writeShellScript "dotfiles-setup" ''
+          if [ ! -d "$HOME/dotfiles" ]; then
+            git clone https://github.com/iamnande/dotfiles.git "$HOME/dotfiles"
+            cd "$HOME/dotfiles"
+            make fish gitconfig helix zellij claude
+          fi
+        ''}";
+      };
+      Install.WantedBy = [ "default.target" ];
+    };
+  };
 }
