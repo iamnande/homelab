@@ -33,6 +33,7 @@
       vm.proxmox = ./modules/vm/proxmox.nix;
       users.nick = ./modules/users/nick.nix;
       disk.btrfs = ./modules/disk/btrfs.nix;
+      k3s.server = ./modules/k3s/server.nix;
     };
 
     nixosConfigurations = {
@@ -45,6 +46,11 @@
       devbox-validation = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs self; };
         modules = [ ./modules/hosts/devbox-validation/default.nix ];
+      };
+
+      k3s-1 = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs self; };
+        modules = [ ./modules/hosts/k3s-1/default.nix ];
       };
 
     };
