@@ -131,8 +131,14 @@ ssh nick@<hostname>
 
 ## rebuilding an existing host
 
-from `~/homelab/compute/` on the target machine:
+local (on the target machine itself):
 
 ```fish
 nh os switch .
+```
+
+remote (from any machine with access):
+
+```fish
+nixos-rebuild switch --flake .#<hostname> --target-host nick@<hostname> --sudo
 ```

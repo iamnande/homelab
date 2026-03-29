@@ -26,6 +26,8 @@ README first.
 ## compute flake conventions
 
 the compute flake uses a custom `mhq` output (not `nixosModules`) for all shared modules.
+note: `mhq` is non-standard and triggers a `nix flake check` warning. a rename to
+`nixosModules` is pending — don't add new references to `mhq` expecting it to stay.
 modules follow `<class>.<type>` namespacing:
 
 ```
@@ -71,7 +73,7 @@ a new host-specific module.
 - **k3s cluster** — next after validation node. node profiles will likely be
   `k3s.server` and `k3s.agent` modules.
 - **home-manager** — decided. being introduced iteratively. trajectory:
-  1. home-manager as a nixos module in this flake, per-user config in `modules/users/`
+  1. ✅ home-manager as a nixos module in this flake, per-user config in `modules/users/`
   2. dotfiles repo evolves into a standalone home-manager flake (source of truth for "nick on any unix")
   3. homelab imports dotfiles flake: `inputs.dotfiles.homeManagerModules.nick`
   migrate one component at a time — validate each before moving the next. stow goes

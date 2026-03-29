@@ -55,7 +55,7 @@ the proxmox tower is plugged directly into the gateway on a dedicated lab port.
 ### compute
 
 nixos vms on proxmox, managed via a nix flake with composable modules.
-currently one active devbox (`devbox-nick`). validation node and k3s cluster next.
+currently one active devbox (`devbox-nick`). k3s cluster next.
 
 → [compute/README.md](compute/README.md)
 
