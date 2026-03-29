@@ -82,6 +82,8 @@ alongside future `bare-metal.nuc`, `bare-metal.pi5`, or whatever comes next.
 | scsi controller | virtio scsi single                                         |
 | qemu agent      | enabled                                                    |
 | cpu type        | host                                                       |
+| cpu             | 1 socket × N cores (per host spec)                        |
+| memory          | 4096 MB minimum; 8192 MB for k3s/devbox nodes             |
 | disk            | 50GB scsi0, local-btrfs, write-back cache                  |
 | network         | vmbr0, virtio (paravirtualized), vlan tag per host         |
 
@@ -92,7 +94,7 @@ boot order on creation: `ide2 (iso) → scsi0 → net0`
 boot the vm, then in the noVNC console set a root password:
 
 ```bash
-passwd root
+sudo passwd root
 ```
 
 grab the ip from `ip addr show` or the unifi client list.
