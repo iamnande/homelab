@@ -18,6 +18,11 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    dotfiles = {
+      url = "github:iamnande/dotfiles";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, disko, home-manager, ... }@inputs: {
