@@ -84,8 +84,8 @@ alongside future `bare-metal.nuc`, `bare-metal.pi5`, or whatever comes next.
 | memory          | 8GB (devboxen), 4GB (k3s nodes)                            |
 | network         | vmbr0, virtio (paravirtualized), no vlan tag               |
 
-> no vlan tag needed — the proxmox tower is plugged directly into a gateway port
-> explicitly tagged as lab (vlan 30) traffic.
+> no vlan tag needed — the proxmox tower is on a switch access port tagged as lab
+> (vlan 30). the switch handles vlan assignment; vms get untagged traffic on vlan 30.
 
 boot order on creation: `ide2 (iso) → scsi0 → net0`
 
@@ -97,7 +97,7 @@ boot the vm, then in the noVNC console set a root password:
 sudo passwd root
 ```
 
-grab the ip from the gateway or `ip addr show`.
+grab the ip from unifi client list or `ip addr show`.
 
 ### 3. install
 
