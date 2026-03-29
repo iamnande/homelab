@@ -51,7 +51,7 @@
           if [ ! -d "$HOME/dotfiles" ]; then
             git clone https://github.com/iamnande/dotfiles.git "$HOME/dotfiles"
             cd "$HOME/dotfiles"
-            make fish gitconfig helix zellij claude
+            make fish && make gitconfig && make helix && make zellij && make claude
           fi
         ''}";
       };
