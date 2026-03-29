@@ -49,16 +49,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1774805699,
+        "lastModified": 1774806012,
         "narHash": "sha256-BAsbTUYgBqKClfDiFHeCMLgxNfhAmGMMorhht3E+UoE=",
         "owner": "iamnande",
         "repo": "dotfiles",
-        "rev": "94488e0ae1976f377440df1edc053876c018166b",
+        "rev": "0a9e2895421033f7a36fe19891d9671399f30e6f",
         "type": "github"
       },
       "original": {
         "owner": "iamnande",
-        "ref": "feat/4_claude-hm-migration",
         "repo": "dotfiles",
         "type": "github"
       }
