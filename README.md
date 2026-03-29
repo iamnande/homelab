@@ -33,7 +33,7 @@ but it is absolutely not the same. this setup lets me practice enterprise-style
 patterns at home that would otherwise be atypical in a home environment.
 
 anywho. it's a mix of learning, building useful stuff, practicing for the real
-world, and reclaiming digital independence - all while keepint it fun
+world, and reclaiming digital independence - all while keeping it fun
 (🤞🏼).
 
 ---

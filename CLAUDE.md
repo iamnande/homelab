@@ -70,8 +70,12 @@ a new host-specific module.
 
 - **k3s cluster** — next after validation node. node profiles will likely be
   `k3s.server` and `k3s.agent` modules.
-- **home-manager for dotfiles** — possible future direction for sharing config
-  between nixos and macos. not decided. don't architect toward it unless asked.
+- **home-manager** — decided. being introduced iteratively. trajectory:
+  1. home-manager as a nixos module in this flake, per-user config in `modules/users/`
+  2. dotfiles repo evolves into a standalone home-manager flake (source of truth for "nick on any unix")
+  3. homelab imports dotfiles flake: `inputs.dotfiles.homeManagerModules.nick`
+  migrate one component at a time — validate each before moving the next. stow goes
+  away when `home.file` covers it. don't get ahead of what's been migrated.
 - **bare-metal.nuc** — graphical nixos with hyprland. hardware module pattern is
   already established, just needs the new class.
 

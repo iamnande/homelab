@@ -89,9 +89,19 @@ alongside future `bare-metal.nuc`, `bare-metal.pi5`, or whatever comes next.
 
 boot order on creation: `ide2 (iso) → scsi0 → net0`
 
-### 2. install
+### 2. prep the iso
 
-boot the vm, grab the ip from the gateway or `ip addr show`, then from `~/homelab/compute/`:
+boot the vm, then in the noVNC console set a root password:
+
+```bash
+sudo passwd root
+```
+
+grab the ip from the gateway or `ip addr show`.
+
+### 3. install
+
+from `~/homelab/compute/`:
 
 ```fish
 nix run github:nix-community/nixos-anywhere -- --flake .#<hostname> root@<ip>
@@ -99,7 +109,7 @@ nix run github:nix-community/nixos-anywhere -- --flake .#<hostname> root@<ip>
 
 nixos-anywhere runs disko to partition, installs the flake config, and reboots automatically.
 
-### 3. finalize
+### 4. finalize
 
 in proxmox: disable `ide2`, leaving `scsi0 → net0`.
 
