@@ -52,7 +52,7 @@
           if [ ! -d "$HOME/dotfiles" ]; then
             git clone https://github.com/iamnande/dotfiles.git "$HOME/dotfiles"
             cd "$HOME/dotfiles"
-            make helix && make zellij && make claude
+            make zellij && make claude
           fi
         ''}";
       };

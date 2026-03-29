@@ -20,7 +20,7 @@
     };
 
     dotfiles = {
-      url = "github:iamnande/dotfiles";
+      url = "github:iamnande/dotfiles/feat/4_helix-hm-migration";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
