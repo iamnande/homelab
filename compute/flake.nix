@@ -21,7 +21,6 @@
 
     dotfiles = {
       url = "github:iamnande/dotfiles";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
