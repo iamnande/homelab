@@ -2,20 +2,36 @@
 
 this file tells Claude Code how to work in this repository. read it fully before
 making any changes. for an overview of what this repo is and how it's structured,
-see [README.md](README.md).
+see [README.md](README.md) and [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
 ## repo structure
 
 ```
-compute/    nixos flake — all workload-running infrastructure
-dns/        dns config and strategy
-hypervisor/ proxmox configuration
-ingress/    ingress/reverse proxy
-network/    network config, vlans, segmentation
-services/   internal and public services
-storage/    storage strategy and config
+infra/
+  nixos/      nixos flake — all managed hosts (vms + bare-metal)
+  hyperv/     proxmox configuration and vm inventory
+  iac/
+    dns/      porkbun — zones and records
+    network/  unifi — vlans, firewall, wireless
+    edge/     ngrok — domains, credentials, traffic policies
+    hosts/    vm + bare-metal provisioning
+
+platform/
+  appsets/    argocd applicationsets
+  templates/  shared applicationset templates and components
+
+services/     k8s workloads — each service owns their stack
+  argocd/
+  authentik/
+  dashboard/
+  personal-site/
+  forgejo/
+  secrets/
+
+network/      network config, vlans, segmentation
+storage/      storage strategy and config (future)
 ```
 
 each directory has its own README. when working in a specific area, read that
@@ -23,9 +39,9 @@ README first.
 
 ---
 
-## compute flake conventions
+## nixos flake conventions
 
-the compute flake uses `nixosModules` for all shared modules.
+the nixos flake (`infra/nixos/`) uses `nixosModules` for all shared modules.
 modules follow `<class>.<type>` namespacing:
 
 ```
@@ -59,31 +75,17 @@ a new host-specific module.
 
 ## platform
 
-- all compute nodes are nixos
+- all managed hosts run nixos
 - proxmox is the hypervisor for vms
-- bare-metal nodes (nuc, future) will follow the same flake pattern with different
-  hardware modules
-
----
-
-## future (uncertain)
-
-- **k3s cluster** — next after validation node. node profiles will likely be
-  `k3s.server` and `k3s.agent` modules.
-- **home-manager** — decided. being introduced iteratively. trajectory:
-  1. ✅ home-manager as a nixos module in this flake, per-user config in `modules/users/`
-  2. dotfiles repo evolves into a standalone home-manager flake (source of truth for "nick on any unix")
-  3. homelab imports dotfiles flake: `inputs.dotfiles.homeManagerModules.nick`
-  migrate one component at a time — validate each before moving the next. stow goes
-  away when `home.file` covers it. don't get ahead of what's been migrated.
-- **bare-metal.nuc** — graphical nixos with hyprland. hardware module pattern is
-  already established, just needs the new class.
+- bare-metal nodes (nuc, pis, future) follow the same flake pattern with different hardware modules
+- k3s runs on `lab-endurance-core-01` — workloads deploy via argocd watching `platform/` and `services/`
 
 ---
 
 ## what to avoid
 
-- don't suggest non-nix solutions for anything managed by this flake
+- don't suggest non-nix solutions for anything managed by the flake
 - don't add packages directly to host configs — they belong in shared modules
-- don't assume all hosts are vms — bare-metal is coming
+- don't assume all hosts are vms — bare-metal is in active use
 - don't hardcode hostnames or ips in modules — keep modules reusable
+- don't co-locate argocd applicationsets with service configs — platform/ and services/ are separate layers

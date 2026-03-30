@@ -7,10 +7,8 @@ hey there 👋🏻 this is my home lab. there are many like it, but this one is 
 * [overview](#overview)
 * [architecture](#architecture)
     * [network](#network)
-    * [compute](#compute)
-    * [hypervisor](#hypervisor)
-    * [dns](#dns)
-    * [ingress](#ingress)
+    * [infrastructure](#infrastructure)
+    * [platform](#platform)
     * [services](#services)
     * [storage](#storage)
 
@@ -44,6 +42,8 @@ the lab is designed for safe experimentation with enterprise patterns.
 everything flows through the gateway — a single point to enforce segmentation,
 policies, and observability.
 
+see [ARCHITECTURE.md](ARCHITECTURE.md) for the full picture.
+
 ### network
 
 segmentation-first. 7 vlans across 6 trust zones, default-deny between zones.
@@ -52,34 +52,26 @@ the proxmox tower is plugged directly into the gateway on a dedicated lab port.
 
 → [network/README.md](network/README.md)
 
-### compute
+### infrastructure
 
-nixos vms on proxmox, managed via a nix flake with composable modules.
-active nodes: `devbox-nick` (devbox), `lab-endurance-core-01` (k3s control plane).
+nixos vms and bare-metal hosts managed via a nix flake with composable modules.
+proxmox ve as the hypervisor. terraform for provisioning and external resources
+(dns, networking, edge/tunnel, hosts).
 
-→ [compute/README.md](compute/README.md)
+→ [infra/nixos/README.md](infra/nixos/README.md)
+→ [infra/hyperv/README.md](infra/hyperv/README.md)
 
-### hypervisor
+### platform
 
-proxmox ve on a tower. hosts all lab vms.
+argocd on k3s. applicationsets in `platform/` watch `services/` — each service
+manages its own stack independently. `platform/` is the deployment engine,
+`services/` is what gets deployed.
 
-→ [hypervisor/README.md](hypervisor/README.md)
-
-### dns
-
-controld via doh for all vlans. split-horizon for internal resolution.
-
-→ [dns/README.md](dns/README.md)
-
-### ingress
-
-tbd.
-
-→ [ingress/README.md](ingress/README.md)
+→ [platform/README.md](platform/README.md)
 
 ### services
 
-tbd.
+k8s workloads running on k3s. public services fronted by ngrok at `*.morethq.com`.
 
 → [services/README.md](services/README.md)
 
