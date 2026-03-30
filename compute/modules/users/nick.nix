@@ -11,10 +11,6 @@
     ];
   };
 
-  environment.systemPackages = with pkgs; [
-    zellij
-  ];
-
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.sharedModules = [ inputs.dotfiles.homeManagerModules.nick ];
