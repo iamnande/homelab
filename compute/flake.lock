@@ -44,11 +44,11 @@
     },
     "dotfiles": {
       "locked": {
-        "lastModified": 1774834337,
-        "narHash": "sha256-JSC8s38qFCXgPGAbT8mVpv9bGfOOjNt8jcJ2DQ+DO1g=",
+        "lastModified": 1774837891,
+        "narHash": "sha256-LNbL8v/RQ8WAlqsgQPpTwjq3/GUiC+RoVdUM8zlBo0s=",
         "owner": "iamnande",
         "repo": "dotfiles",
-        "rev": "294e53f09c72abb6a71c16d53ed7609a49196c0f",
+        "rev": "1ac8d8349ca860d9d5f4e52cfb569486a30426ae",
         "type": "github"
       },
       "original": {
