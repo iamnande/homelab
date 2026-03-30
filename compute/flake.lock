@@ -43,17 +43,12 @@
       }
     },
     "dotfiles": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
       "locked": {
-        "lastModified": 1774806012,
-        "narHash": "sha256-BAsbTUYgBqKClfDiFHeCMLgxNfhAmGMMorhht3E+UoE=",
+        "lastModified": 1774831777,
+        "narHash": "sha256-qsxI0p8qSfoiRBJP2dMKUemFbnmXAZLssAdSeZ4F6cI=",
         "owner": "iamnande",
         "repo": "dotfiles",
-        "rev": "0a9e2895421033f7a36fe19891d9671399f30e6f",
+        "rev": "de99c26eaf81d0e8dcb8ec88ccd1d72add6f1b57",
         "type": "github"
       },
       "original": {
