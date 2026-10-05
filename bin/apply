@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+# apply [host] [-n]
+# Make this machine match a host's manifest: install what `drift` reports as
+# missing, copy what differs, enable what is disabled. It never removes a
+# package or a file. Run it as yourself; it calls sudo where it needs to. It
+# stops at the first failed step and is safe to run again.
+# Usage:
+#   apply     fix what drift reports, printing each command as it runs
+#   apply -n  print the commands and change nothing
+# Exit: 0 done, 2 usage or error, else the status of the step that failed.
+
+set -euo pipefail
+
+here=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+
+die() {
+	printf 'apply: %s\n' "$*" >&2
+	exit 2
+}
+
+dry=
+host=
+for arg in "$@"; do
+	case $arg in
+		-n) dry=1 ;;
+		-*) die 'usage: apply [host] [-n]' ;;
+		*)
+			[[ -z $host ]] || die 'usage: apply [host] [-n]'
+			host=$arg
+			;;
+	esac
+done
+
+# Home files and yay builds must belong to you, not to root.
+(( EUID != 0 )) || die 'run as yourself, not as root'
+host=${host:-$(< /etc/hostname)}
+manifest=$here/hosts/$host
+[[ -d $manifest ]] || die "no manifest for host $host"
+
+run() {
+	printf '%s\n' "$*"
+	[[ -n $dry ]] || "$@"
+}
+
+status=0
+report=$("$here/bin/drift" "$host") || status=$?
+(( status <= 1 )) || exit "$status"
+
+pkgs=() aur=() deps=() files=() units=() user_units=() settings=() left=()
+while IFS= read -r finding; do
+	case $finding in
+		'pkg: missing: '*) pkgs+=("${finding##*: }") ;;
+		'aur: missing: '*) aur+=("${finding##*: }") ;;
+		*': dependency: '*) deps+=("${finding##*: }") ;;
+		'file: missing: '* | 'file: differs: '* | 'file: mode: '*)
+			# a file can differ in content and in mode. copy it once.
+			[[ " ${files[*]} " == *" ${finding##*: } "* ]] || files+=("${finding##*: }")
+			;;
+		'unit: disabled: '*) units+=("${finding##*: }") ;;
+		'user-unit: disabled: '*) user_units+=("${finding##*: }") ;;
+		'setting: differs: '*) settings+=("${finding##*: }") ;;
+		'') ;;
+		*) left+=("$finding") ;;
+	esac
+done <<< "$report"
+
+# repo packages
+(( ${#pkgs[@]} == 0 )) || run sudo pacman -S --needed "${pkgs[@]}"
+
+# files. Modes come from the executable bit, the only mode git keeps.
+ssh=()
+for dst in "${files[@]}"; do
+	if [[ $dst == "$HOME"/* ]]; then
+		src=$manifest/home/${dst#"$HOME"/}
+		as=()
+	else
+		src=$manifest/root$dst
+		as=(sudo)
+	fi
+	mode=644
+	[[ ! -x $src ]] || mode=755
+	run "${as[@]}" install -D -m "$mode" "$src" "$dst"
+	[[ $dst != /etc/ssh/* ]] || ssh+=("$dst")
+done
+
+# A bad sshd config must not reach the running daemon.
+if (( ${#ssh[@]} )); then
+	if ! run sudo sshd -t; then
+		printf 'apply: sshd -t failed. sshd was not reloaded and still runs its old config.\n' >&2
+		printf 'apply: fix or move aside before sshd next restarts: %s\n' "${ssh[*]}" >&2
+		exit 1
+	fi
+	run sudo systemctl reload sshd
+fi
+
+# foreign packages. After the files, because a build reads makepkg.conf.
+(( ${#aur[@]} == 0 )) || run yay -S --needed "${aur[@]}"
+(( ${#deps[@]} == 0 )) || run sudo pacman -D --asexplicit "${deps[@]}"
+
+# units
+(( ${#units[@]} == 0 )) || run sudo systemctl enable --now "${units[@]}"
+(( ${#user_units[@]} == 0 )) || run systemctl --user enable --now "${user_units[@]}"
+
+# settings. A finding names the schema and key; the value is in the list.
+for setting in "${settings[@]}"; do
+	while read -r schema key value; do
+		[[ "$schema $key" != "$setting" ]] || run gsettings set "$schema" "$key" "$value"
+	done < "$manifest/gsettings.txt"
+done
+
+# what drift reports and apply does not touch
+for finding in "${left[@]}"; do
+	printf 'apply: left alone: %s\n' "$finding" >&2
+done
