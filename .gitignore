@@ -1,6 +1,9 @@
 # mdbook output
 /book/
 
+# the offline package repo and the aur build directories. see bin/mkrepo
+/vendor/
+
 # written by `mdbook-mermaid install .`
 /mermaid.min.js
 /mermaid-init.js

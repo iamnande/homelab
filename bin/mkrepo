@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# mkrepo [dest]
+# Snapshot every installed package into a pacman repo, so the host can be
+# rebuilt without a network. Rerun after every upgrade or install.
+# Usage:
+#   mkrepo                 — refresh the repo in $HOMELAB_VENDOR/repo
+#   mkrepo /run/media/usb  — write the repo somewhere else (usb stick, nfs)
+
+set -euo pipefail
+
+name=mhq
+# vendor/ is untracked and lives in the main clone only, so a worktree has
+# none. A fixed path keeps every checkout writing to the one real copy.
+vendor=${HOMELAB_VENDOR:-$HOME/src/iamnande/homelab/vendor}
+dest=${1:-$vendor/repo}
+
+# Repo packages are still in the pacman cache. AUR packages are wherever
+# makepkg or yay left them.
+sources=(/var/cache/pacman/pkg "$vendor"/* "$HOME"/.cache/yay/*)
+
+mkdir -p "$dest"
+keep=$(mktemp)
+trap 'rm -f "$keep"' EXIT
+
+missing=0
+while read -r pkg ver; do
+	found=
+	for dir in "${sources[@]}"; do
+		for file in "$dir/$pkg-$ver"-*.pkg.tar.zst; do
+			[[ -f $file ]] || continue
+			found=$file
+			break 2
+		done
+	done
+
+	if [[ -z $found ]]; then
+		printf 'mkrepo: no package file for %s %s\n' "$pkg" "$ver" >&2
+		missing=$((missing + 1))
+		continue
+	fi
+
+	base=${found##*/}
+	printf '%s\n%s.sig\n' "$base" "$base" >> "$keep"
+	[[ -f $dest/$base ]] || cp --reflink=auto "$found" "$dest/$base"
+	[[ ! -f $found.sig || -f $dest/$base.sig ]] || cp --reflink=auto "$found.sig" "$dest/$base.sig"
+done < <(pacman -Q)
+
+# Drop versions that are no longer installed, then rebuild the database from
+# what is left so it always matches the files beside it.
+for file in "$dest"/*.pkg.tar.zst "$dest"/*.pkg.tar.zst.sig; do
+	[[ -f $file ]] || continue
+	grep -qxF "${file##*/}" "$keep" || rm -f "$file"
+done
+rm -f "$dest/$name".db* "$dest/$name".files*
+repo-add --quiet "$dest/$name.db.tar.zst" "$dest"/*.pkg.tar.zst
+
+printf 'mkrepo: %s packages, %s, in %s\n' \
+	"$(find "$dest" -name '*.pkg.tar.zst' | wc -l)" "$(du -sh "$dest" | cut -f1)" "$dest"
+
+if (( missing )); then
+	printf 'mkrepo: %s installed packages are not in the repo\n' "$missing" >&2
+	exit 1
+fi
