@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = *
+
+[Action]
+Description = snapshot @ before the upgrade
+When = PreTransaction
+Exec = /usr/local/bin/snapshot-root
+AbortOnFail

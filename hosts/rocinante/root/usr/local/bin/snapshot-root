@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# snapshot-root
+# Take a read-only snapshot of the root subvolume and keep the unified kernel
+# image beside it, then prune old pairs. pacman calls this before an upgrade
+# (/etc/pacman.d/hooks/00-snapshot-root.hook). A nonzero exit aborts the
+# upgrade, so nothing is upgraded without a way back.
+
+set -euo pipefail
+
+store=/.snapshots
+image=/boot/EFI/Linux/arch-linux.efi
+keep=5
+
+die() {
+	printf 'snapshot-root: %s\n' "$*" >&2
+	exit 1
+}
+
+# The store has to be the @snapshots subvolume, mounted. A plain directory
+# would put the snapshots inside @, and a rollback of @ would take them along.
+mountpoint -q "$store" || die "$store is not mounted"
+[[ $(findmnt -no FSROOT "$store") == /@snapshots ]] || die "$store is not the @snapshots subvolume"
+
+# /boot is vfat and outside the snapshot. A root rolled back without its
+# kernel image boots a kernel whose modules are gone, so the two travel as a
+# pair.
+name=$(date -u +%Y-%m-%dT%H-%M-%SZ)
+btrfs subvolume snapshot -r / "$store/$name" > /dev/null
+cp "$image" "$store/$name.efi"
+printf 'snapshot-root: %s\n' "$name"
+
+# Prune only after a good snapshot, and only names this script makes. A
+# failed prune is a warning: it is no reason to stop an upgrade.
+pattern='[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]T[0-9][0-9]-[0-9][0-9]-[0-9][0-9]Z'
+while IFS= read -r old; do
+	if btrfs subvolume delete "$store/$old" > /dev/null; then
+		rm -f "$store/$old.efi"
+	else
+		printf 'snapshot-root: could not prune %s\n' "$old" >&2
+	fi
+done < <(find "$store" -mindepth 1 -maxdepth 1 -type d -name "$pattern" -printf '%f\n' | sort -r | tail -n "+$((keep + 1))")
