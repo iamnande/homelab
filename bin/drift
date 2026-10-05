@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+# drift [host]
+# Report where this machine differs from a host's manifest. Read-only: it
+# writes nothing and never calls sudo. One finding per line, as
+# `kind: what: subject`.
+# Usage:
+#   drift            the manifest of the host named in /etc/hostname
+#   drift rocinante  a named host's manifest, against this machine
+# Exit: 0 clean, 1 drift, 2 usage or error.
+
+set -euo pipefail
+
+here=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+
+die() {
+	printf 'drift: %s\n' "$*" >&2
+	exit 2
+}
+
+(( $# <= 1 )) || die 'usage: drift [host]'
+host=${1:-$(< /etc/hostname)}
+manifest=$here/hosts/$host
+[[ -d $manifest ]] || die "no manifest for host $host"
+for tool in pacman cmp systemctl; do
+	command -v "$tool" > /dev/null || die "missing tool: $tool"
+done
+
+found=0
+finding() {
+	printf '%s\n' "$1"
+	found=1
+}
+
+# Lines of a list file, without comments and blanks.
+lines() {
+	sed -e 's/#.*//' -e 's/[[:space:]]*$//' -e '/^$/d' "$1"
+}
+
+# packages. A listed package has to be installed, and installed explicitly,
+# or an orphan cleanup could take it. An explicit package has to be listed.
+declare -A native=() foreign=() explicit=() listed=()
+while read -r name; do native[$name]=1; done < <(pacman -Qqn)
+while read -r name; do foreign[$name]=1; done < <(pacman -Qqm)
+while read -r name; do explicit[$name]=1; done < <(pacman -Qqe)
+
+check_list() { # kind, then pkglist arguments
+	local kind=$1 name
+	shift
+	while IFS= read -r name; do
+		if [[ $name == *[[:space:]]* ]]; then
+			finding "list: malformed: $name"
+			continue
+		fi
+		if [[ -n ${listed[$name]:-} ]]; then
+			finding "list: duplicate: $name"
+			continue
+		fi
+		listed[$name]=$kind
+
+		if [[ $kind == pkg && -n ${foreign[$name]:-} ]]; then
+			finding "list: foreign: $name"
+		elif [[ $kind == aur && -n ${native[$name]:-} ]]; then
+			finding "list: native: $name"
+		elif [[ -z ${native[$name]:-}${foreign[$name]:-} ]]; then
+			finding "$kind: missing: $name"
+		elif [[ -z ${explicit[$name]:-} ]]; then
+			finding "$kind: dependency: $name"
+		fi
+	done < <("$here/bin/pkglist" "$host" "$@")
+}
+
+check_unlisted() { # kind, then the pacman query for that kind
+	local kind=$1 name
+	shift
+	while read -r name; do
+		[[ -n ${listed[$name]:-} ]] || finding "$kind: unlisted: $name"
+	done < <(pacman "$@")
+}
+
+check_list pkg
+check_unlisted pkg -Qqen
+check_list aur --aur
+check_unlisted aur -Qqem
+
+# files. Every file under root/ and home/ against its target.
+check_tree() { # source tree, target prefix
+	local tree=$1 prefix=$2 src dst dir src_x dst_x
+	[[ -d $tree ]] || return 0
+	while IFS= read -r -d '' src; do
+		dst=$prefix/${src#"$tree"/}
+
+		if [[ -r $dst ]]; then
+			cmp -s "$src" "$dst" || finding "file: differs: $dst"
+			# The executable bit is the only mode git keeps.
+			src_x=0 dst_x=0
+			[[ ! -x $src ]] || src_x=1
+			[[ ! -x $dst ]] || dst_x=1
+			(( src_x == dst_x )) || finding "file: mode: $dst"
+		elif [[ -e $dst ]]; then
+			finding "file: unchecked: $dst (permission denied)"
+		else
+			# A missing file and a directory we cannot look into are
+			# the same from here. Walk up to tell them apart.
+			dir=${dst%/*}
+			while [[ -n $dir && ! -d $dir ]]; do dir=${dir%/*}; done
+			if [[ -r ${dir:-/} && -x ${dir:-/} ]]; then
+				finding "file: missing: $dst"
+			else
+				finding "file: unchecked: $dst (permission denied)"
+			fi
+		fi
+
+		[[ ! -e $dst.pacnew ]] || finding "file: pacnew: $dst.pacnew"
+	done < <(find "$tree" -type f -print0 | sort -z)
+}
+
+check_tree "$manifest/root" ''
+check_tree "$manifest/home" "$HOME"
+
+# units. One per line, enabled by hand on this host.
+check_units() { # list file, kind, then systemctl arguments
+	local file=$1 kind=$2 unit state
+	shift 2
+	[[ -f $file ]] || return 0
+	while IFS= read -r unit; do
+		state=$(systemctl "$@" is-enabled "$unit" 2> /dev/null) || true
+		[[ $state == enabled ]] || finding "$kind: disabled: $unit"
+	done < <(lines "$file")
+}
+
+check_units "$manifest/units.txt" unit
+check_units "$manifest/user-units.txt" user-unit --user
+
+# settings. `schema key value` per line.
+if [[ -f $manifest/gsettings.txt ]]; then
+	command -v gsettings > /dev/null || die 'missing tool: gsettings'
+	while read -r schema key value; do
+		if have=$(gsettings get "$schema" "$key" 2> /dev/null); then
+			have=${have#\'}
+			[[ ${have%\'} == "$value" ]] || finding "setting: differs: $schema $key"
+		else
+			finding "setting: unchecked: $schema $key"
+		fi
+	done < <(lines "$manifest/gsettings.txt")
+fi
+
+exit "$found"
