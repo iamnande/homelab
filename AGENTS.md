@@ -10,7 +10,8 @@
   for it.
 - keep automation thin: plain bash, no framework. rocinante may move to nixos.
 - commands in the book run in both bash and fish.
-- terms: host, book, spec, record, manifest, apply, drift, roadmap.
+- terms: host, book, spec, record, manifest, apply, drift, roadmap. they are
+  defined in `docs/README.md`.
 
 ## maintaining these instructions
 

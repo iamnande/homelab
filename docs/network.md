@@ -72,10 +72,10 @@ graph TD
 
     %% --- lab ---
     subgraph lab["lab (vlan 30)"]
-        proxmox["proxmox tower<br/>(hypervisor)"]
+        rocinante["rocinante<br/>(tower)"]
     end
 
-    switch --> proxmox
+    switch --> rocinante
 
     %% --- Legend ---
     classDef wired stroke-width:2px,stroke:#333;
@@ -192,23 +192,7 @@ graph TD
 
 ---
 
-## proxmox trunk port
+## wired hosts
 
-the proxmox tower connects to the switch via a trunk port on **port 8** of the
-unifi lite 8 poe with the following vlan policy:
-
-* **native (untagged): vlan 30 (lab)** — proxmox host management traffic rides
-  untagged. the switch enforces vlan 30 implicitly. no vlan sub-interface needed
-  on the host.
-
-* **tagged: vlan 70 (service)** — vms destined for the service network carry an
-  explicit vlan 70 tag set on the proxmox network device.
-
-* **vlan 30 vms (e.g. devbox-nick)** — also ride native (no explicit tag). this
-  is intentional: any accidental untagged traffic lands on vlan 30 (lab), not
-  vlan 70 (service) or any other sensitive segment. the switch is the boundary,
-  not individual vm configs.
-
-**tradeoff accepted:** vlan 30 vms can't carry an explicit tag — they're
-indistinguishable from host management traffic at the switch level. acceptable
-for a lab-tier threat model. revisit if vlan 30 ever holds sensitive workloads.
+[rocinante](hosts/README.md) connects to **port 8** of the unifi lite 8 poe on
+vlan 30 (lab).

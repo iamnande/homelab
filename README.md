@@ -5,8 +5,7 @@ hey there 👋🏻 this is my home lab. there are many like it, but this one is 
 [peace be the journey](https://youtu.be/fu_6DXHut-Y?si=fUSLJ6zVKgsiiDO_) 🥂
 
 * [overview](#overview)
-* [architecture](#architecture)
-    * [network](#network)
+* [docs](#docs)
 
 ## overview
 
@@ -32,15 +31,8 @@ world, and reclaiming digital independence - all while keeping it fun
 
 ---
 
-## architecture
+## docs
 
-the lab is designed for safe experimentation with enterprise patterns.
-everything flows through the gateway — a single point to enforce segmentation,
-policies, and observability.
+the docs are a book: the network, the hosts, and the roadmap.
 
-### network
-
-segmentation-first. 7 vlans across 6 trust zones, default-deny between zones.
-split-horizon dns via controld (doh). all outbound traffic through proton vpn.
-
-→ [network/README.md](network/README.md)
+→ [docs/README.md](docs/README.md), or `mdbook serve` for the rendered version.

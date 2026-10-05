@@ -1,0 +1,6 @@
+# mdbook output
+/book/
+
+# written by `mdbook-mermaid install .`
+/mermaid.min.js
+/mermaid-init.js

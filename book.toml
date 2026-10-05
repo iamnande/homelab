@@ -1,0 +1,12 @@
+[book]
+title = "homelab"
+src = "docs"
+
+[build]
+create-missing = false
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+
+[output.html]
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
