@@ -70,7 +70,8 @@ affected: nick, daily, on rocinante. sector7 shares the dotfiles.
 9. bring rocinante up to the agreed package and settings list, key-only ssh
    included, and delete the leftovers. (R19 to R22)
 10. give sector7 an inventory page and the commit-to-cluster path. (R23)
-11. housekeeping: version opord, wire in the guard hook. (R25, R26)
+11. housekeeping: opord is renamed to senzu and versioned, and the guard hook
+    is wired in. (R25, R26)
 12. plan docs move to `docs/prds` and get a browser view. (R2, R28)
 
 ## Configuration
@@ -81,7 +82,7 @@ affected: nick, daily, on rocinante. sector7 shares the dotfiles.
 | idle: screen off after | dotfiles, hypridle | 15 min |
 | idle: sleep | dotfiles, hypridle | never |
 | screenshot binds | dotfiles, `hyprland.lua` | region `SUPER+SHIFT+S`, whole output `Print` |
-| screenshot directory | dotfiles | `~/src/iamnande/opord/references/screenshots` |
+| screenshot directory | dotfiles | `~/src/iamnande/senzu/references/screenshots` |
 | power menu bind | dotfiles, `hyprland.lua` | `SUPER+M`, replacing today's bare exit |
 | volume step | dotfiles, `hyprland.lua` | 5% |
 | notifications | dotfiles, mako | everforest colors. timeout unchanged: ten seconds, app timeouts ignored |
@@ -91,7 +92,7 @@ affected: nick, daily, on rocinante. sector7 shares the dotfiles.
 | nvidia session env | rocinante manifest | `~/.config/uwsm/env`. host-local: sector7 has no nvidia card |
 | snapshot retention | rocinante manifest | keep the last 5 |
 | sshd | rocinante manifest | keys only, no passwords, no root login |
-| senzu state directory | dotfiles | `~/src/iamnande/opord/senzu`, the same on every host |
+| senzu state directory | dotfiles | `~/src/iamnande/senzu/beans`, the same on every host |
 | `apply` and `drift` host | homelab | this host's name, from `/etc/hostname` |
 
 ## States
@@ -124,7 +125,7 @@ affected: nick, daily, on rocinante. sector7 shares the dotfiles.
 | "is this box what the record says" | read the readme and compare by hand | `drift` |
 | rebuild | hand runbook plus undocumented `/etc` edits | install from the lists, then `apply` |
 | a package is added | `pacman -S`, maybe a note | add it to a list with what asks for it, `apply`, `mkrepo`, a record row |
-| `senzu`, `/iam-*` skills | look in `~/opord/senzu`, find nothing | find state in `~/src/iamnande/opord/senzu` |
+| `senzu`, `/iam-*` skills | look in `~/opord/senzu`, find nothing | find state in `~/src/iamnande/senzu/beans` |
 | `make hypr mako` | stows `hypr` only | stows both |
 | homelab readme | describes nixos vms on proxmox | points at the book |
 | an agent opens homelab | told everything is nix, no pacman, no scripts | a short `AGENTS.md` that matches the repo |
@@ -149,14 +150,15 @@ tech spec.
   retention count, read-only. rolling back is a documented manual step.
 - **`hyprland.conf`.** deleted in the change that adds `hyprland.lua`. the way
   back is the previous dotfiles commit.
-- **screenshots.** files in opord's `references/screenshots`. opord is a git
-  repo after R25; committing a screenshot is done by hand.
+- **screenshots.** files in the senzu repo's `references/screenshots`. it is a
+  git repo after R25; committing a screenshot is done by hand.
 - **the plan docs page.** one private page per stream. published at the first
   PRD draft, republished to the same link whenever a doc changes, link kept in
   the state file. the markdown in git stays the source of truth.
-- **opord.** a git repo with a private remote on nick's github. nick creates
-  the remote and pushes; agents commit locally. the work devbox copy goes to a
-  separate private org, later, and nothing personal goes there.
+- **the senzu repo.** today's opord, renamed, with its state directory renamed
+  to `beans`. a git repo with a private remote on nick's github. nick
+  creates the remote and pushes; agents commit locally. the work devbox copy
+  goes to a separate private org, later, and nothing personal goes there.
 - **the published guide.** superseded by the book. it stays published until
   nick takes it down.
 - **the old record.** `~/src/mhq/src/svc/infra` is emptied by the move.
@@ -182,7 +184,7 @@ tech spec.
   nvidia or a battery.
 - **key-only ssh lockout.** key login is proven from a second host before the
   switch. the box has a local console, so a mistake is recoverable.
-- **the screenshot directory is missing** (a fresh host, opord not there yet).
+- **the screenshot directory is missing** (a fresh host, the senzu repo not there yet).
   the bind creates it.
 - **suspend on nvidia.** untested, and an agent must not suspend the box it
   runs on. nick tests sleep and wake. if wake fails, the sleep entry comes out
@@ -224,7 +226,8 @@ tech spec.
   path.
 - rocinante: the package list in R19, key-only ssh, gtk dark, the vrr test,
   the leftovers.
-- opord: `git init` in `~/src/iamnande/opord`, and a private remote on nick's
+- the senzu repo: rename `~/src/iamnande/opord` to `~/src/iamnande/senzu` and
+  its state directory to `beans`, `git init`, and a private remote on nick's
   github.
 
 **out of scope:**
@@ -237,7 +240,7 @@ tech spec.
 - hosting the book. it is served with `mdbook serve` on rocinante for now.
 - the personal tracking system, and senzu as a service with a mobile-first web
   ui. its own stream. the plan docs page (R28) is the one piece of it here.
-- the work devbox copy of opord. nick, later.
+- the work devbox copy, still named opord there. nick, later.
 - automatic sleep.
 - upgrading hyprland on sector7. nick does it before he pulls there.
 - archiving `way` and `tardis` on github. nick, in the github ui.
@@ -267,7 +270,8 @@ tech spec.
 | deployment wording | name the tooling; describe the shape | "gitops, self-hosted, k3s" | the repo is public |
 | security gaps | close them all here; their own stream | key-only ssh on rocinante here, the rest in their own stream | they span both hosts, and a public repo is the wrong place to list them |
 | agent instructions | patch the nix rules out of `CLAUDE.md`; rewrite on the dotfiles model | rewrite: one real `AGENTS.md`, `CLAUDE.md` only imports it | the old file describes a repo that no longer exists. a few rules that change behavior age better than a repo tour |
-| opord remote | local only; a private repo on nick's github | a private repo on nick's github | state survives the box. the work copy gets its own private home |
+| the state repo's name | opord with a `senzu` directory inside; senzu with a `beans` directory inside | senzu, with `beans` | one name for the workflow, the cli and the repo that grows into its service. a senzu bean per stream; nick's pick |
+| the state repo's remote | local only; a private repo on nick's github | a private repo on nick's github | state survives the box. the work copy gets its own private home |
 | where plan docs live | `plan/`; `docs/prds/` | `docs/prds/` | nick's call |
 | reading plan docs | raw markdown; a hand-built page per doc; `mdbook serve`; one viewer page that renders the markdown | one viewer page that renders the markdown | one source and no second copy to drift. it works in any repo, with no book around the docs |
 
@@ -279,7 +283,7 @@ tech spec.
   `hyprland.conf` is deleted in the same change. lands first, on its own.
 - **R2 repo layout.** nothing in the dotfiles refers to `~/dotfiles`,
   `~/iamnande`, `~/homelab`, `~/rawr` or `~/opord`. repos resolve at
-  `~/src/<owner>/<repo>` and senzu state at `~/src/iamnande/opord/senzu`.
+  `~/src/<owner>/<repo>` and senzu state at `~/src/iamnande/senzu/beans`.
   `~/worktrees` is unchanged. no symlinks in `~`. the plan skill and
   `docs/agents.md` put plan docs in `docs/prds/<date>_<slug>/`, not `plan/`.
 - **R3 defunct repos.** `way` and `tardis` are gone from the dotfiles: the
@@ -288,7 +292,7 @@ tech spec.
   stows both.
 - **R5 screenshots.** one bind captures a region, one the whole output. the
   result is on the clipboard and in a file under
-  `~/src/iamnande/opord/references/screenshots`.
+  `~/src/iamnande/senzu/references/screenshots`.
 - **R6 idle.** the session locks after the idle timeout, then the screen turns
   off. it never sleeps on its own. an idle inhibitor prevents both.
 - **R7 power menu.** one bind opens a menu with lock, sleep, log out, reboot
@@ -343,9 +347,10 @@ tech spec.
   as "gitops, self-hosted, k3s". the inventory script is in the repo.
 - **R24 public repo.** nothing committed to homelab names the deploy product
   behind sector7, and nothing publishes a host's open security gaps.
-- **R25 opord.** `~/src/iamnande/opord` is a git repo with the state files
-  committed and a private remote on nick's github. nick creates the remote and
-  pushes.
+- **R25 senzu repo.** `~/src/iamnande/opord` is renamed to
+  `~/src/iamnande/senzu`, and the state directory inside it to `beans`. it
+  is a git repo with the state files committed and a private remote on nick's
+  github. nick creates the remote and pushes.
 - **R26 guard hook.** `claude-guard` runs in agent sessions on rocinante, and
   its deny paths match the new layout. nick applies both; the agent hands over
   the diff.
