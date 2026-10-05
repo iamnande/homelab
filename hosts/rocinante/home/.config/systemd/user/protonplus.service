@@ -1,0 +1,6 @@
+[Unit]
+Description=ProtonPlus
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flatpak run com.vysp3r.ProtonPlus update all

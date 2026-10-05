@@ -1,0 +1,6 @@
+[Default Applications]
+application/x-desktop=steam.desktop
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
+
+[Added Associations]
+application/x-desktop=steam.desktop;

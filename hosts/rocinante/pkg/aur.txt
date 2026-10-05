@@ -1,0 +1,6 @@
+# foreign packages, built with yay.
+yay                           # aur helper. built by hand from vendor/yay on a fresh install
+1password                     # passwords, and the ssh agent that holds the git and ssh keys
+1password-cli                 # op, for secrets in scripts
+protonplus                    # installs and updates proton builds (home/.config/systemd/user)
+golangci-lint-langserver-bin  # go lint in the editor (dotfiles: helix)

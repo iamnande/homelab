@@ -1,0 +1,16 @@
+# steam, the 32-bit side of the graphics stack, and audio.
+lib32-nvidia-utils       # 32-bit games on the nvidia driver
+lib32-vulkan-icd-loader  # vulkan for 32-bit games
+vulkan-tools             # vulkaninfo, to check the driver
+steam                    # games
+protontricks             # per-game fixes for proton prefixes
+pipewire-pulse           # audio for pulseaudio clients: steam, games, firefox
+pipewire-alsa            # audio for alsa clients
+wireplumber              # pipewire session manager (user-units.txt)
+realtime-privileges      # realtime scheduling for audio. the user is in `realtime`
+bluez                    # bluetooth, for a controller once the box has a radio
+bluez-utils              # bluetoothctl
+mangohud                 # frame time overlay (steam launch options)
+lib32-mangohud           # the overlay in 32-bit games
+gamemode                 # performance tweaks while a game runs (steam launch options)
+lib32-gamemode           # gamemode for 32-bit games

@@ -1,0 +1,36 @@
+# the shell, the editor and the toolchains.
+fish                  # login shell (dotfiles: fish)
+stow                  # links the dotfiles into place
+zellij                # terminal sessions (dotfiles: zellij)
+helix                 # editor (dotfiles: helix)
+lazygit               # git ui, opened from helix (dotfiles: helix)
+eza                   # ls (dotfiles: fish)
+jq                    # json in scripts (dotfiles: bin, make guardrails)
+ripgrep               # search (dotfiles: bin)
+fd                    # find files
+fzf                   # fuzzy finder
+difftastic            # structural diffs
+github-cli            # pull requests from the terminal (dotfiles: the iam-* skills)
+mise                  # per-project tool versions
+go                    # go toolchain
+go-tools              # the golang.org/x/tools binaries
+gopls                 # go language server (dotfiles: helix)
+golangci-lint         # go linter
+rustup                # rust toolchain, and rust-analyzer (dotfiles: helix)
+nodejs                # node (dotfiles: bin)
+pnpm                  # node packages
+prettier              # formatter (dotfiles: helix)
+yaml-language-server  # yaml (dotfiles: helix)
+marksman              # markdown language server, helix's default
+buf                   # protobuf (dotfiles: helix)
+kubectl               # kubernetes cli (dotfiles: fish)
+kubectx               # context and namespace switching (dotfiles: fish)
+helm                  # kubernetes packages
+k9s                   # kubernetes ui
+docker                # containers
+docker-compose        # compose files
+docker-buildx         # multi-platform builds
+mdbook                # renders the book in this repo
+mdbook-mermaid        # the diagrams in the book
+lychee                # link check for the book
+shellcheck            # lint for bin/ and the snapshot script

@@ -1,0 +1,30 @@
+# the system as archinstall laid it down, and the tools to look after it.
+base                 # the system
+sudo                 # root for the wheel user
+linux                # kernel
+linux-firmware       # firmware for the board and the nic
+mkinitcpio           # builds the unified kernel image (root/etc/mkinitcpio.d/linux.preset)
+btrfs-progs          # the root filesystem and its snapshots
+amd-ucode            # microcode for the ryzen 9 5900x
+zram-generator       # swap on zram (root/etc/systemd/zram-generator.conf)
+grub                 # bootloader, loads the unified kernel image (root/etc/grub.d/15_uki)
+efibootmgr           # grub-install on uefi
+nvidia-open          # driver for the rtx 4070 super
+libva-nvidia-driver  # hardware video decode (home/.config/uwsm/env)
+openssh              # sshd, and the ssh client
+git                  # every repo on the box
+base-devel           # makepkg, for yay and the aur
+nano                 # from archinstall. an editor before the dotfiles are in
+vim                  # from archinstall
+htop                 # from archinstall
+wget                 # from archinstall
+smartmontools        # nvme health
+xdg-utils            # xdg-open
+firefox              # browser
+man-db               # man
+man-pages            # the linux and posix pages
+less                 # pager for man and git
+pacman-contrib       # checkupdates, paccache, pacdiff
+btop                 # system monitor
+tree                 # directory listings (dotfiles: the iam-* skills)
+fastfetch            # system summary

@@ -1,0 +1,3 @@
+# schema key value. gtk apps follow these.
+org.gnome.desktop.interface color-scheme prefer-dark
+org.gnome.desktop.interface gtk-theme Adwaita-dark

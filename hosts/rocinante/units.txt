@@ -1,0 +1,4 @@
+# system units enabled by hand. one per line.
+systemd-networkd.service
+systemd-resolved.service
+sshd.service

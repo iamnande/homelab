@@ -1,0 +1,26 @@
+# the desktop. the config for all of it is in the dotfiles.
+hyprland                     # the compositor (dotfiles: hypr)
+hyprpaper                    # wallpaper (dotfiles: hypr)
+hyprlock                     # lock screen (dotfiles: hypr)
+hypridle                     # idle lock and screen off (dotfiles: hypr)
+hyprshutdown                 # closes apps before the session exits (dotfiles: hypr)
+hyprpolkitagent              # password prompts for polkit (user-units.txt)
+uwsm                         # starts the session from tty1 (dotfiles: fish)
+xdg-desktop-portal-hyprland  # screen sharing and file pickers
+qt5-wayland                  # qt5 apps on wayland
+qt6-wayland                  # qt6 apps on wayland
+waybar                       # top bar (dotfiles: waybar)
+wofi                         # launcher and power menu (dotfiles: wofi)
+mako                         # notifications (dotfiles: mako)
+ghostty                      # terminal (dotfiles: ghostty)
+thunar                       # file manager (dotfiles: hypr)
+gvfs                         # trash and mounts in thunar
+pavucontrol                  # volume control, opened from the bar (dotfiles: waybar)
+playerctl                    # media keys (dotfiles: hypr)
+wl-clipboard                 # clipboard for helix and screenshots
+grim                         # screenshots (dotfiles: bin)
+slurp                        # region select for screenshots (dotfiles: bin)
+noto-fonts                   # the base font (dotfiles: hypr)
+noto-fonts-emoji             # emoji
+noto-fonts-cjk               # chinese, japanese and korean text
+otf-opendyslexic-nerd        # the font in the terminal, the bar and the launcher

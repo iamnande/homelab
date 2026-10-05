@@ -1,0 +1,6 @@
+# user units enabled by hand. one per line.
+pipewire.service
+pipewire-pulse.service
+wireplumber.service
+hyprpolkitagent.service
+protonplus.timer
