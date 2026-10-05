@@ -69,6 +69,8 @@ done <<< "$report"
 
 # files. Modes come from the executable bit, the only mode git keeps.
 ssh=()
+reload=
+user_reload=
 for dst in "${files[@]}"; do
 	if [[ $dst == "$HOME"/* ]]; then
 		src=$manifest/home/${dst#"$HOME"/}
@@ -80,8 +82,17 @@ for dst in "${files[@]}"; do
 	mode=644
 	[[ ! -x $src ]] || mode=755
 	run "${as[@]}" install -D -m "$mode" "$src" "$dst"
-	[[ $dst != /etc/ssh/* ]] || ssh+=("$dst")
+	case $dst in
+		/etc/ssh/*) ssh+=("$dst") ;;
+		/etc/systemd/* | /etc/fstab) reload=1 ;;
+		"$HOME"/.config/systemd/user/*) user_reload=1 ;;
+	esac
 done
+
+# systemd reads unit files and fstab once. Tell it they changed. A unit that
+# is already running keeps its old settings until it is restarted.
+[[ -z $reload ]] || run sudo systemctl daemon-reload
+[[ -z $user_reload ]] || run systemctl --user daemon-reload
 
 # A bad sshd config must not reach the running daemon.
 if (( ${#ssh[@]} )); then
