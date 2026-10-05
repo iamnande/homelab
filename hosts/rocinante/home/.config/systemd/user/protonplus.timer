@@ -2,9 +2,11 @@
 Description=ProtonPlus
 
 [Timer]
+# no Persistent=: with only monotonic triggers it does nothing useful, and
+# once a stamp exists it stops the timer from ever firing when the login
+# comes more than a minute after boot.
 OnBootSec=1min
 OnUnitActiveSec=1h
-Persistent=true
 
 [Install]
 WantedBy=timers.target
