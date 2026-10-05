@@ -500,11 +500,29 @@ line if there is one, and record the link if not. the template has no
   it to `beans/`. then `git init` and one commit of the state files. the
   same step fixes what points at the old path: this stream's state file, the
   hardening stream's, and the agent memory notes. nick creates the private
-  remote `iamnande/senzu` and pushes.
+  remote `iamnande/senzu`; the push is then allowed from rocinante.
 - until order 5 lands the skills still look in `~/opord/senzu`, as they do
   today, so nothing on rocinante gets worse in between.
 - nick applies the two-line path diff to `guardrails/settings.json`, then
   runs `make guardrails`.
+- **pushes follow the host.** the hook's push check, today "only
+  `github.com/ngrok-private`", picks its rule by hostname. on `rocinante` and
+  `sector7`: allow `github.com/iamnande/*`, allow another remote only when it
+  is public, and block any url that names ngrok. everywhere else: the rule as
+  it is. the hook is nick's to edit, from a diff.
+- the last bullet of the global `AGENTS.md` is split so the text and the hook
+  agree. *proposed* wording:
+
+  ```
+  - never set NGROK_ENV to prod or stage, delete branches, run nd ctl or nd db
+    (except lint), publish, force-remove worktrees, or use sudo. hand me the
+    command instead.
+  - pushes follow the host. on work hosts, push only to
+    github.com/ngrok-private. on my own hosts (rocinante, sector7), push only
+    to github.com/iamnande or another public repo, and never to anything
+    ngrok, public included. anything else: hand me the command. in claude
+    code, the claude-guard hook enforces this.
+  ```
 
 ## Query Layer
 
@@ -546,6 +564,8 @@ command-line entry points only.
 | `mk/setup.mk` | per-component recipes, `all`, `ssh` |
 | `docs/agents.md`, `README.md` | paths, plan docs, brew line |
 | `guardrails/settings.json` | deny paths. nick's edit, from a diff |
+| `src/agents/.claude/hooks/claude-guard` | push rule by host. nick's edit, from a diff |
+| `src/agents/.config/AGENTS.md` | the push rule, split out and made per host |
 
 **homelab**
 
@@ -567,7 +587,8 @@ command-line entry points only.
 ## Services & Ordering
 
 one worktree per repo. branches after the first are stacked in the same
-worktree. pushes and merges are nick's.
+worktree. a push needs nick's go-ahead and, on rocinante, may then be run by
+the agent. merges are nick's.
 
 | order | repo / service | branch | base | contents |
 |---|---|---|---|---|
@@ -607,7 +628,7 @@ by who runs them.
 | T17 | from a second host: key login works, a forced password login is refused | nick | R20 |
 | T18 | one game launched with `gamemoderun mangohud %command%` shows the overlay and `gamemoded -s` says active. the vrr result is in the record | nick | R21 |
 | T19 | the offline resolve check from the record passes after `mkrepo` | agent | R14, R15 |
-| T20 | in a new agent session `sudo true` is blocked by the hook | nick | R26 |
+| T20 | in a new agent session on rocinante the hook blocks `sudo true` and a dry-run push to an ngrok url, and lets a dry-run push to `github.com/iamnande` through | nick | R26 |
 | T21 | the plan page shows both docs and its link is in state | agent | R28 |
 | T22 | waybar shows no catppuccin color: `grep -rniE 'catppuccin\|#f5c2e7\|#a6e3a1\|#f5e0dc' src/waybar` finds nothing | agent | R29 |
 
@@ -653,6 +674,7 @@ no flags. each stage is a merge or a command nick runs on rocinante.
 | what happens to `~/src/mhq`? | it is left with empty directories. nick removes them |
 | the guide artifact has no local source. how are the build chapters written? | from the record and from the artifact, read back at execute |
 | is wofi themed? | yes, already everforest. hyprlock is not, and is not in scope |
+| how does the hook tell a home host from a work host, and a public repo from a private one? | *proposed*: by hostname, from a short list in the hook. `github.com/iamnande/*` is always allowed there; any other remote must answer an unauthenticated `git ls-remote` over https, which only a public repo does. nick decides when he edits the hook |
 | is the gamemode group needed? | the package creates it and its polkit rules use it. nick joins it once; the command is in the record |
 
 ## Requirements Coverage

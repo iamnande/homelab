@@ -43,7 +43,9 @@ deadline.
    no overlay, no gamemode, vrr untested, lutris installed and never used,
    protonplus is a flatpak that drags in 3G of runtimes.
 8. **the agent guard hook does not run here.** `~/.claude/hooks` is stowed but
-   `~/.claude/settings.json` has no hooks.
+   `~/.claude/settings.json` has no hooks. and its push rule was written for
+   work: it allows one work org and nothing else, so on nick's own hosts it
+   would block pushes to his own repos.
 9. **plan docs are hard to take in.** a PRD is 300 lines of raw markdown read in
    a terminal, and the plan skill writes it to a gitignored `plan/` that has to
    be force-added.
@@ -157,7 +159,7 @@ tech spec.
   the state file. the markdown in git stays the source of truth.
 - **the senzu repo.** today's opord, renamed, with its state directory renamed
   to `beans`. a git repo with a private remote on nick's github. nick
-  creates the remote and pushes; agents commit locally. the work devbox copy
+  creates the remote. the work devbox copy
   goes to a separate private org, later, and nothing personal goes there.
 - **the published guide.** superseded by the book. it stays published until
   nick takes it down.
@@ -165,7 +167,8 @@ tech spec.
   `vendor/` keeps living on disk, untracked. where it sits is a tech spec call,
   because a worktree has no `vendor/`.
 - **two repos.** dotfiles and homelab, one branch each unless the tech spec
-  stacks the lua port ahead. pushes are nick's.
+  stacks the lua port ahead. a push needs nick's go-ahead; on rocinante the
+  agent may then run it (R26). merges are nick's.
 - **sector7.** nothing reaches it until nick pulls there, so it cannot change
   by accident. in order: upgrade hyprland to 0.56 or later, move its clones to
   `~/src/iamnande/<repo>`, pull, restow every component. nick's action, at
@@ -272,6 +275,7 @@ tech spec.
 | agent instructions | patch the nix rules out of `CLAUDE.md`; rewrite on the dotfiles model | rewrite: one real `AGENTS.md`, `CLAUDE.md` only imports it | the old file describes a repo that no longer exists. a few rules that change behavior age better than a repo tour |
 | the state repo's name | opord with a `senzu` directory inside; senzu with a `beans` directory inside | senzu, with `beans` | one name for the workflow, the cli and the repo that grows into its service. a senzu bean per stream; nick's pick |
 | the state repo's remote | local only; a private repo on nick's github | a private repo on nick's github | state survives the box. the work copy gets its own private home |
+| agent pushes | one rule everywhere (the work org only); a rule per host | a rule per host | the work rule is right at work and wrong at home, where every repo is nick's own. nothing ngrok is ever pushed from a home host |
 | where plan docs live | `plan/`; `docs/prds/` | `docs/prds/` | nick's call |
 | reading plan docs | raw markdown; a hand-built page per doc; `mdbook serve`; one viewer page that renders the markdown | one viewer page that renders the markdown | one source and no second copy to drift. it works in any repo, with no book around the docs |
 
@@ -350,9 +354,13 @@ tech spec.
 - **R25 senzu repo.** `~/src/iamnande/opord` is renamed to
   `~/src/iamnande/senzu`, and the state directory inside it to `beans`. it
   is a git repo with the state files committed and a private remote on nick's
-  github. nick creates the remote and pushes.
+  github. nick creates the remote.
 - **R26 guard hook.** `claude-guard` runs in agent sessions on rocinante, and
-  its deny paths match the new layout. nick applies both; the agent hands over
+  its deny paths match the new layout. its push rule follows the host: on
+  rocinante and sector7 an agent may push to `github.com/iamnande`, public or
+  private, and to other public repos, and never to anything ngrok, public
+  included. on work hosts the rule is unchanged. the global `AGENTS.md` says
+  the same. nick applies the hook and settings changes; the agent hands over
   the diff.
 - **R27 agent instructions.** homelab's agent instructions follow the dotfiles
   model: one real file, `AGENTS.md`, and a `CLAUDE.md` that only imports it. it
