@@ -194,5 +194,5 @@ graph TD
 
 ## wired hosts
 
-[rocinante](hosts/README.md) connects to **port 8** of the unifi lite 8 poe on
+[rocinante](hosts/rocinante/README.md) connects to **port 8** of the unifi lite 8 poe on
 vlan 30 (lab).
