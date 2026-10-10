@@ -1,4 +1,5 @@
-# system units enabled by hand. one per line.
+# system units a fresh install does not enable. one per line.
 systemd-networkd.service
 systemd-resolved.service
+systemd-timesyncd.service
 sshd.service
