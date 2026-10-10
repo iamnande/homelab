@@ -8,6 +8,8 @@
     - [build](hosts/rocinante/build.md)
     - [operate](hosts/rocinante/operate.md)
     - [record](hosts/rocinante/record.md)
+  - [sector7](hosts/sector7/README.md)
+- [deployment](deployment.md)
 - [roadmap](roadmap.md)
 
 # plans

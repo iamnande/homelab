@@ -1,7 +1,7 @@
 # homelab
 
-this book documents the lab: the network, the hosts on it, and what is
-planned. it is the only prose in the repo.
+this book documents the lab: the network, the hosts on it, how things get
+deployed, and what is planned. it is the only prose in the repo.
 
 the lab is designed for safe experimentation with enterprise patterns.
 everything flows through the gateway — a single point to enforce segmentation,
@@ -11,6 +11,7 @@ policies, and observability.
 | --- | --- |
 | [network](network.md) | the gear, the vlans, and how they are kept apart |
 | [hosts](hosts/README.md) | the machines and what each one is for |
+| [deployment](deployment.md) | how a commit becomes the running site |
 | [roadmap](roadmap.md) | what does not exist yet |
 | plans | the plan docs behind each change, under `prds/` |
 
