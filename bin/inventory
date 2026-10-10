@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# inventory
+# Print what a host is and what it runs: host, hardware, network, boot and
+# disk, packages, desktop, services, repos. Read-only, and it needs no root.
+# A probe whose tool is missing prints nothing and the rest carries on.
+# Usage:
+#   inventory                — print to the terminal
+#   inventory > ~/host.txt   — keep it. the output describes a host in detail,
+#                              so it does not belong in this repo.
+
+set -u
+
+section() {
+	printf '\n== %s ==\n' "$1"
+}
+
+have() {
+	command -v "$1" > /dev/null 2>&1
+}
+
+# Run a command if its tool exists. Errors are the host's business, not ours.
+try() {
+	have "$1" && "$@" 2> /dev/null
+}
+
+printf 'inventory %s as %s\n' "$(date +%F)" "$(id -un)"
+
+section host
+uname -n
+sed -n 's/^PRETTY_NAME=//p' /etc/os-release | tr -d '"'
+uname -r
+try uptime -p
+printf 'shell: %s\n' "$(getent passwd "$(id -un)" | cut -d: -f7)"
+printf 'groups: %s\n' "$(id -nG)"
+
+section hardware
+cat /sys/class/dmi/id/sys_vendor /sys/class/dmi/id/product_name /sys/class/dmi/id/board_name 2> /dev/null | paste -sd ' '
+sed -n 's/^model name[[:space:]]*: //p' /proc/cpuinfo | head -n 1
+printf 'threads: %s\n' "$(nproc)"
+grep MemTotal /proc/meminfo
+try lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS
+try lspci | grep -E 'Network|Ethernet|VGA|3D'
+
+section network
+try ip -brief address | grep -v '^lo '
+try ip route show default
+printf 'listening: %s\n' "$(try ss -Hltn | awk '{print $4}' | paste -sd ' ')"
+printf 'firewall: %s\n' "$(systemctl is-enabled nftables iptables ufw 2> /dev/null | paste -sd ' ')"
+
+section 'boot and disk'
+try findmnt -rno TARGET,SOURCE,FSTYPE -t btrfs,ext4,xfs,vfat
+try df -h /
+
+section packages
+if have pacman; then
+	printf 'explicit %s, total %s\n' "$(pacman -Qqe | wc -l)" "$(pacman -Qq | wc -l)"
+	printf -- '-- explicit\n'
+	pacman -Qqe | paste -sd ' ' | fold -s -w 150
+	printf -- '-- foreign (aur)\n'
+	pacman -Qqm | paste -sd ' ' | fold -s -w 150
+fi
+if have brew; then
+	printf -- '-- brew\n'
+	brew list -1 2> /dev/null | paste -sd ' '
+fi
+
+section desktop
+try pacman -Q hyprland hyprpaper hyprlock hypridle uwsm waybar wofi mako ghostty
+try Hyprland --version | head -n 1
+find "$HOME/.config/hypr/" -maxdepth 1 -type f -printf '%f\n' 2> /dev/null | sort | paste -sd ' '
+
+section services
+printf -- '-- system, enabled\n'
+systemctl list-unit-files --state=enabled --no-legend 2> /dev/null | awk '{print $1}' | paste -sd ' ' | fold -s -w 150
+printf -- '-- user, enabled\n'
+systemctl --user list-unit-files --state=enabled --no-legend 2> /dev/null | awk '{print $1}' | paste -sd ' ' | fold -s -w 150
+printf -- '-- timers\n'
+systemctl list-timers --all --no-legend 2> /dev/null | awk '{print $(NF-1)}' | paste -sd ' '
+systemctl --user list-timers --all --no-legend 2> /dev/null | awk '{print $(NF-1)}' | paste -sd ' '
+if have k3s || systemctl cat k3s.service > /dev/null 2>&1; then
+	printf -- '-- k3s\n'
+	try k3s --version | head -n 1
+	printf 'unit: %s, %s\n' "$(systemctl is-enabled k3s.service 2> /dev/null)" "$(systemctl is-active k3s.service 2> /dev/null)"
+	# the whole ExecStart, continuation lines and quoted flags included
+	systemctl cat k3s.service 2> /dev/null | awk '/^ExecStart=/ {on = 1} on {print} on && !/\\$/ {on = 0}'
+fi
+
+section repos
+for dir in "$HOME"/*/ "$HOME"/src/*/*/; do
+	[[ -d $dir.git || -f $dir.git ]] || continue
+	printf '%s  %s  %s\n' "${dir%/}" \
+		"$(git -C "$dir" log -1 --format='%h %cs' 2> /dev/null)" \
+		"$(git -C "$dir" status --short --branch 2> /dev/null | head -n 1)"
+done
+
+section end
