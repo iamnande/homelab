@@ -4,6 +4,7 @@ lib32-vulkan-icd-loader  # vulkan for 32-bit games
 vulkan-tools             # vulkaninfo, to check the driver
 steam                    # games
 protontricks             # per-game fixes for proton prefixes
+appstream                # protonplus loads libappstream, and its aur package does not list it
 pipewire-pulse           # audio for pulseaudio clients: steam, games, firefox
 pipewire-alsa            # audio for alsa clients
 wireplumber              # pipewire session manager (user-units.txt)

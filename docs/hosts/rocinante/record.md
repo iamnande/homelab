@@ -107,7 +107,7 @@ the monitor had been running at 60hz under xfce, the mode it advertises as
 preferred. the hyprland config asks for the highest rate instead, and it has
 run at 239.96hz since.
 
-## the refinement, 10-04 to 10-10
+## the refinement, 10-04 to 10-11
 
 the build files moved into this repo as the manifest, and from row 30 on the
 host changes through `bin/apply`.
@@ -131,6 +131,7 @@ host changes through `bin/apply`.
 | 42 | 10-10 19:2x | libnotify listed | `bin/apply` marked `libnotify` explicit. the dotfiles scripts report errors with `notify-send`, and it was only installed as a dependency. out of order: this was between rows 40 and 41 |
 | 43 | 10-10 23:2x | the gtk icon theme | `bin/apply` set `icon-theme` to `Adwaita`. it still named `elementary`, a theme from the xfce days that is no longer installed |
 | 44 | 10-10 23:5x | a banner on the console login | `bin/apply` installed `/etc/issue`: the host's name with a label, and the kernel under it. the stock file only named the distribution |
+| 45 | 10-10 23:14 to 10-11 00:04 | appstream removed, then put back | `pacman -Rns appstream` took 16 packages that looked unneeded: nothing listed them as a dependency. protonplus loads `libappstream` without its aur package saying so, and its hourly run failed twice. `appstream` is in the manifest now, and `bin/apply` installed it again |
 
 two things worth keeping from these rows:
 
