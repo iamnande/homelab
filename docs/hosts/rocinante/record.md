@@ -130,6 +130,7 @@ host changes through `bin/apply`.
 | 41 | 10-10 22:19 | the dark theme for gtk3 apps | `bin/apply` installed `gnome-themes-extra`. the gtk setting from row 30 names `Adwaita-dark`, and that theme was not on the box, so thunar stayed light until now |
 | 42 | 10-10 19:2x | libnotify listed | `bin/apply` marked `libnotify` explicit. the dotfiles scripts report errors with `notify-send`, and it was only installed as a dependency. out of order: this was between rows 40 and 41 |
 | 43 | 10-10 23:2x | the gtk icon theme | `bin/apply` set `icon-theme` to `Adwaita`. it still named `elementary`, a theme from the xfce days that is no longer installed |
+| 44 | 10-10 23:5x | a banner on the console login | `bin/apply` installed `/etc/issue`: the host's name with a label, and the kernel under it. the stock file only named the distribution |
 
 two things worth keeping from these rows:
 
