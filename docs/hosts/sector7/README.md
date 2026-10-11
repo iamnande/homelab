@@ -67,12 +67,18 @@ page.
 
 ### where it comes from
 
-_not written yet._
+final fantasy 7. sector 7 is one of the eight sectors of midgar, the city the
+game starts in.
 
 ### my history with it
 
-_not written yet._
+final fantasy tactics, 7 and 8 were core memory games growing up, alongside
+tomb raider, halo 1 to 3, metal gear and splinter cell.
 
 ### why i picked it
 
-_not written yet._
+the top plate of sector 7 was notoriously dropped by shinra, killing 50k
+people. after the crew leaves midgar, the survivors rebuild.
+
+sector7 is meant to be rebuilt. once, twice, a hundred times. the name reminds
+us to measure impact before doing so.
