@@ -129,6 +129,7 @@ host changes through `bin/apply`.
 | 40 | 10-10 19:09 | a keyring, unlocked by the login | `bin/apply` installed `gnome-keyring` and `/etc/pam.d/login`, the stock file plus two `pam_gnome_keyring.so` lines. 1password had no secret store to keep this host's two-factor token in, so every unlock asked for a code. reboot: a login into a user session that is already running does not start the keyring's socket |
 | 41 | 10-10 22:19 | the dark theme for gtk3 apps | `bin/apply` installed `gnome-themes-extra`. the gtk setting from row 30 names `Adwaita-dark`, and that theme was not on the box, so thunar stayed light until now |
 | 42 | 10-10 19:2x | libnotify listed | `bin/apply` marked `libnotify` explicit. the dotfiles scripts report errors with `notify-send`, and it was only installed as a dependency. out of order: this was between rows 40 and 41 |
+| 43 | 10-10 23:2x | the gtk icon theme | `bin/apply` set `icon-theme` to `Adwaita`. it still named `elementary`, a theme from the xfce days that is no longer installed |
 
 two things worth keeping from these rows:
 
