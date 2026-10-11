@@ -120,7 +120,8 @@ ln -sf /run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
 the first line lays down every system file in the manifest: the hostname, the
 locale and the console keymap, `fstab`, `pacman.conf`, the kernel command line
 and the image preset, the grub entry, zram, the wired network, the sshd
-drop-in, and the snapshot hook with its script.
+drop-in, the login pam file that unlocks the keyring, and the snapshot hook
+with its script.
 
 **new disk:** `fstab` and `etc/kernel/cmdline` name the old disk's filesystems
 by id. `blkid /dev/nvme0n1p1 /dev/nvme0n1p2` prints the new ones. put the two
@@ -175,24 +176,12 @@ straight over to hyprland.
 
 **new disk:** there are no dotfiles yet, so it is a bare fish prompt. clone
 them, or copy the clone from the stick, and link every component. then log out
-and back in. it is one `make` per component for now: they share a
-prerequisite, so `make a b` only links `a`.
+and back in.
 
 ```sh
 git clone https://github.com/iamnande/dotfiles ~/src/iamnande/dotfiles
 cd ~/src/iamnande/dotfiles
-make agents
-make backgrounds
-make bin
-make fish
-make ghostty
-make git
-make helix
-make hypr
-make mako
-make waybar
-make wofi
-make zellij
+make all
 make fisher
 ```
 

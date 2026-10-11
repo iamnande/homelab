@@ -1,7 +1,7 @@
 # sector7
 
 the nuc. it is the devbox, and it runs the small k3s cluster that serves my
-site.
+site. it has no display: i reach it over ssh.
 
 | | |
 | --- | --- |
@@ -11,20 +11,21 @@ site.
 | disk | 477G nvme |
 | network | wifi, on the home vlan. the 2.5GbE port is unused |
 
-this page is an inventory, taken on 2026-10-03 with `bin/inventory`. sector7
-does not have a manifest or a record yet. giving it the same treatment as
+this page is an inventory, taken on 2026-10-03, when the host still had a
+display. `bin/inventory` prints a fresh one. sector7 does not have a manifest
+or a record yet. giving it the same treatment as
 [rocinante](../rocinante/README.md) is on the [roadmap](../../roadmap.md).
 
 ## spec
 
 what the host needs and why, with no operating system or package named.
 
-- **the same desktop as rocinante.** one set of dotfiles drives both hosts,
-  and this host is the reference setup for them.
+- **the same shell and editor as rocinante.** one set of dotfiles drives both
+  hosts. this one takes the shell and dev side of them and leaves the desktop.
 - **a dev environment.** the editor, the shell and the language servers for
   the code i write on it. it has no discrete graphics card, so nothing here is
   for games.
-- **a cluster that stays up.** the site runs on it, so the host is a desktop
+- **a cluster that stays up.** the site runs on it, so the host is a devbox
   and a small production server at once. that is why a change only reaches it
   when i pull it there by hand.
 - **one identity, held in the password manager,** as on rocinante.
@@ -55,8 +56,9 @@ what the hand-installed packages are for, by group:
 | tools | git, github-cli, lazygit, zellij, fzf, ripgrep, fd, eza, tree, stow |
 | apps | 1password and its cli, zen browser, zoom |
 
-hyprland there is one release behind rocinante. it has to reach 0.56 before it
-pulls the dotfiles again: the config is lua from then on, which 0.56 loads.
+the desktop packages are still installed and no longer used. hyprland there is
+one release behind rocinante. the dotfiles' config is lua now, which 0.56
+loads, so it has to reach 0.56 before anyone logs in at its console.
 
 how a commit gets to the cluster is on the [deployment](../../deployment.md)
 page.

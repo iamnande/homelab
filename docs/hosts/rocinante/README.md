@@ -27,10 +27,10 @@ what the host needs and why. nothing in this section names an operating system
 or a package, so it survives a move to another one. the manifest below is how
 arch meets it today.
 
-- **the same desktop as sector7.** one set of dotfiles drives both hosts: the
-  compositor, the bar, the launcher, the terminal, the shell, the editor.
-  moving between them should cost nothing, so this host carries only what the
-  two cannot share.
+- **one set of dotfiles, shared with sector7.** they drive the compositor, the
+  bar, the launcher and the terminal here, and the shell and the editor on
+  both hosts. moving between them should cost nothing, so this host carries
+  only what the two cannot share.
 - **a session that knows about the graphics card.** the card needs its
   vendor's driver, and the session needs a few environment variables to render
   and decode video on it. sector7 has no such card, which is why this lives
