@@ -13,6 +13,7 @@ qt6-wayland                  # qt6 apps on wayland
 waybar                       # top bar (dotfiles: waybar)
 wofi                         # launcher and power menu (dotfiles: wofi)
 mako                         # notifications (dotfiles: mako)
+libnotify                    # notify-send, which the scripts report errors with (dotfiles: bin)
 ghostty                      # terminal (dotfiles: ghostty)
 thunar                       # file manager (dotfiles: hypr)
 gvfs                         # trash and mounts in thunar
