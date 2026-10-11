@@ -710,3 +710,24 @@ no flags. each stage is a merge or a command nick runs on rocinante.
 | R27: agent instructions | § Core 4 |
 | R28: plan docs page | § Core 10, T21 |
 | R29: top bar | § Core 3, T9, T22 |
+
+## As Built
+
+added 2026-10-10, at refine. where the build differs from the spec above. the
+spec is left as it was planned; the record and the commits hold the detail.
+
+| the spec says | what was built | why |
+|---|---|---|
+| the bar gets waybar's `idle_inhibitor` | `custom/caffeine`, a `caffeine` script, and `SUPER+I` | nick wanted a key for it, and the built-in toggle has no way in from outside the bar |
+| the bar keeps `hyprland/workspaces` | `ext/workspaces`, with workspaces 1 to 6 made persistent in `hyprland.lua` | a click in the old module sends a dispatch string the lua config cannot parse, so the numbers were dead after order 1 |
+| ten `XF86Audio*` binds | eight | the example's two brightness keys are left out: neither host has a backlight |
+| gtk dark is two settings | the two settings and `gnome-themes-extra` | the theme the setting names was not installed, so gtk3 apps stayed light |
+| mako gets everforest colors | colors, the font wofi uses, round corners, padding and an outer margin | tuned live, so a popup lines up with the window gap |
+| no keyring | `gnome-keyring` and `/etc/pam.d/login` in the manifest | 1password had nowhere to keep this host's two-factor token, so every unlock asked for a code |
+| `libnotify` is not listed | listed | the dotfiles scripts report errors with `notify-send` |
+| the vrr test runs a game | settled from the driver, with no game | it reports the hdmi output as not vrr capable |
+| `drift` reports both directions | both for packages. files and units from host to manifest are a manual check in the operate chapter | the other direction needs an ignore list. accepted |
+| the fish config is not touched beyond the purge | one more condition in it | an ssh login with a forwarded agent replaced 1password's own socket. found at T17 |
+| six branches | seven. homelab gained `nick/rocinante-hyprland-refinement-desktop` on top of the sector7 branch | the host side of order 6: the keyring, `libnotify`, the vrr result, the gtk theme |
+| the R26 diff is two lines and rides with order 5 | four files, as one patch, on the dotfiles desktop branch with order 6 | the settings' push sentence and the docs had to change with the hook, and order 6 was already stacked on order 5 |
+| stage 9: on sector7, upgrade hyprland, move the clones, pull, `make all`, confirm the session and the bar | sector7 is headless since 10-10. unstow in the old place, move the clones, pull, then link the shell and dev components only | stow refuses to restow a clone that has moved |
