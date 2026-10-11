@@ -126,6 +126,7 @@ host changes through `bin/apply`.
 | 37 | 10-10 14:40 | prune seen working | four more `snapshot-root` runs made six pairs. it kept five and removed the oldest with its image |
 | 38 | 10-10 15:03 | ssh takes keys only | `bin/apply` installed `/etc/ssh/sshd_config.d/10-keys-only.conf`, ran `sshd -t` and reloaded sshd. from the second host a key login works and a password login is refused |
 | 39 | 10-10 15:19 | offline repo refreshed | `bin/mkrepo`: 839 packages, 2.9G |
+| 40 | 10-10 19:09 | a keyring, unlocked by the login | `bin/apply` installed `gnome-keyring` and `/etc/pam.d/login`, the stock file plus two `pam_gnome_keyring.so` lines. 1password had no secret store to keep this host's two-factor token in, so every unlock asked for a code. reboot: a login into a user session that is already running does not start the keyring's socket |
 
 two things worth keeping from these rows:
 
@@ -144,5 +145,6 @@ two things worth keeping from these rows:
 | 10-03 | a clean root resolves every list from the offline repo alone: 783 packages, no network |
 | 10-10 | `bin/drift` exits 0 |
 | 10-10 | the same resolve after the upgrade: 109 names, 822 packages, every file present in the repo |
+| 10-10 | after the reboot the login unlocks the keyring, and a second 1password unlock asks for no code |
 | never | the [build](build.md) chapter end to end, from the iso |
 | never | a [rollback](operate.md#rolling-back) to a snapshot |
