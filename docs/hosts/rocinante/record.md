@@ -127,6 +127,7 @@ host changes through `bin/apply`.
 | 38 | 10-10 15:03 | ssh takes keys only | `bin/apply` installed `/etc/ssh/sshd_config.d/10-keys-only.conf`, ran `sshd -t` and reloaded sshd. from the second host a key login works and a password login is refused |
 | 39 | 10-10 15:19 | offline repo refreshed | `bin/mkrepo`: 839 packages, 2.9G |
 | 40 | 10-10 19:09 | a keyring, unlocked by the login | `bin/apply` installed `gnome-keyring` and `/etc/pam.d/login`, the stock file plus two `pam_gnome_keyring.so` lines. 1password had no secret store to keep this host's two-factor token in, so every unlock asked for a code. reboot: a login into a user session that is already running does not start the keyring's socket |
+| 41 | 10-10 22:19 | the dark theme for gtk3 apps | `bin/apply` installed `gnome-themes-extra`. the gtk setting from row 30 names `Adwaita-dark`, and that theme was not on the box, so thunar stayed light until now |
 
 two things worth keeping from these rows:
 

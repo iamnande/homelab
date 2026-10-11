@@ -17,6 +17,7 @@ libnotify                    # notify-send, which the scripts report errors with
 ghostty                      # terminal (dotfiles: ghostty)
 thunar                       # file manager (dotfiles: hypr)
 gvfs                         # trash and mounts in thunar
+gnome-themes-extra           # the Adwaita-dark theme gsettings.txt names, so gtk3 apps like thunar go dark
 pavucontrol                  # volume control, opened from the bar (dotfiles: waybar)
 playerctl                    # media keys (dotfiles: hypr)
 wl-clipboard                 # clipboard for helix and screenshots
