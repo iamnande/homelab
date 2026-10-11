@@ -11,9 +11,9 @@ proper and leaves this page.
   manifest and a dated record.
 - **bluetooth on rocinante.** there is no radio in the box. a usb dongle, then
   the service gets enabled.
-- **variable refresh rate on rocinante.** the monitor reports it off over hdmi
-  and the test is still to run. if hdmi cannot do it, the fix is a displayport
-  cable.
+- **variable refresh rate on rocinante.** not possible over hdmi: the monitor
+  offers it there only as freesync, which the nvidia driver does not use. it
+  needs a displayport cable, then `misc.vrr` in the hyprland config.
 
 ## the book
 

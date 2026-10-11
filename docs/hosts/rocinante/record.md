@@ -146,5 +146,6 @@ two things worth keeping from these rows:
 | 10-10 | `bin/drift` exits 0 |
 | 10-10 | the same resolve after the upgrade: 109 names, 822 packages, every file present in the repo |
 | 10-10 | after the reboot the login unlocks the keyring, and a second 1password unlock asks for no code |
+| 10-10 | variable refresh over hdmi: not available. the driver reports the output as `vrr_capable: 0`, and the monitor's edid offers it there as freesync (48 to 240hz), not as hdmi 2.1 vrr |
 | never | the [build](build.md) chapter end to end, from the iso |
 | never | a [rollback](operate.md#rolling-back) to a snapshot |
