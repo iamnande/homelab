@@ -132,6 +132,11 @@ host changes through `bin/apply`.
 | 43 | 10-10 23:2x | the gtk icon theme | `bin/apply` set `icon-theme` to `Adwaita`. it still named `elementary`, a theme from the xfce days that is no longer installed |
 | 44 | 10-10 23:5x | a banner on the console login | `bin/apply` installed `/etc/issue`: the host's name with a label, and the kernel under it. the stock file only named the distribution |
 | 45 | 10-10 23:14 to 10-11 00:04 | appstream removed, then put back | `pacman -Rns appstream` took 16 packages that looked unneeded: nothing listed them as a dependency. protonplus loads `libappstream` without its aur package saying so, and its hourly run failed twice. `appstream` is in the manifest now, and `bin/apply` installed it again |
+| 46 | 10-04 21:28 | the hyprland config in lua | `~/.config/hypr` linked to the dotfiles branch that holds `hyprland.lua`, then a logout and login. 0.56 loads it, and the old `hyprland.conf` is gone. out of order: this was between rows 27 and 28 |
+| 47 | 10-10 18:12 to 20:14 | the desktop pieces from the dotfiles | linked one at a time from the dotfiles branch: the `screenshot`, `powermenu` and `caffeine` scripts, the volume and media keys, `hypridle` (lock at 10 minutes, screen off at 15), mako's look, and the bar's tray, idle toggle and power button. out of order: this was between rows 39 and 41 |
+| 48 | 10-11 01:21 | both repos landed on `main`, and the host follows `main` again | the dotfiles clone pulled, the three config links pointed back at it, then `make all` (13 components; `~/.ssh/config` and the three scripts are new) and `make guardrails`. this clone moved from `expedition/000` to `main`, with `mdbook-mermaid install .` once for the book. log out and in |
+| 49 | 10-11 01:36 | offline repo refreshed | `bin/mkrepo`: 842 packages, 2.9G |
+| 50 | 10-11 01:41 | 1password's own autostart masked | `make hypr` linked an empty `app-com.onepassword.OnePassword@autostart.service` into `~/.config/systemd/user`. 1password was started twice at every login: by its autostart entry, and by the hyprland config, which waits for the bar's tray first. the autostart one usually won and got no tray icon. after a logout and login there is one start, and the icon is there |
 
 two things worth keeping from these rows:
 
@@ -152,5 +157,8 @@ two things worth keeping from these rows:
 | 10-10 | the same resolve after the upgrade: 109 names, 822 packages, every file present in the repo |
 | 10-10 | after the reboot the login unlocks the keyring, and a second 1password unlock asks for no code |
 | 10-10 | variable refresh over hdmi: not available. the driver reports the output as `vrr_capable: 0`, and the monitor's edid offers it there as freesync (48 to 240hz), not as hdmi 2.1 vrr |
+| 10-11 | after the merge, from the main clone: `bin/drift` exits 0, and the resolve gives 113 names, 841 packages, every file present in the repo |
+| 10-11 | after a logout and login, 1password's icon is in the tray and the journal shows one start |
+| never | shut down from the power menu. lock, sleep, log out and reboot all work |
 | never | the [build](build.md) chapter end to end, from the iso |
 | never | a [rollback](operate.md#rolling-back) to a snapshot |
