@@ -120,8 +120,8 @@ ln -sf /run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
 the first line lays down every system file in the manifest: the hostname, the
 locale and the console keymap, `fstab`, `pacman.conf`, the kernel command line
 and the image preset, the grub entry, zram, the wired network, the sshd
-drop-in, the login pam file that unlocks the keyring, and the snapshot hook
-with its script.
+drop-in, the tty1 autologin drop-in, the login pam file that unlocks the
+keyring, and the snapshot hook with its script.
 
 **new disk:** `fstab` and `etc/kernel/cmdline` name the old disk's filesystems
 by id. `blkid /dev/nvme0n1p1 /dev/nvme0n1p2` prints the new ones. put the two
@@ -169,14 +169,15 @@ reboot
 
 ## 5. first login
 
-log in on tty1 as `iamnande`.
+tty1 logs `iamnande` in by itself, through the autologin drop-in from step 3.
 
 keeping the disk, the dotfiles are still linked in `@home`, so fish hands
-straight over to hyprland.
+straight over to hyprland, which comes up behind the lock. the password goes
+in there, and it unlocks the keyring.
 
-**new disk:** there are no dotfiles yet, so it is a bare fish prompt. clone
-them, or copy the clone from the stick, and link every component. then log out
-and back in.
+**new disk:** there are no dotfiles yet, so it is a bare fish prompt, already
+logged in with no lock. clone them, or copy the clone from the stick, and link
+every component. then `exit`, and tty1 logs in again.
 
 ```sh
 git clone https://github.com/iamnande/dotfiles ~/src/iamnande/dotfiles
