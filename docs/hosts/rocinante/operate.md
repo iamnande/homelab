@@ -209,6 +209,28 @@ logins are by key only. to let another key in, add its line to
 the way back from a lockout is the local console: delete
 `/etc/ssh/sshd_config.d/10-keys-only.conf` and `sudo systemctl reload sshd`.
 
+## the login
+
+tty1 logs me in at boot, and hyprland starts the lock first, so the lock
+screen is the login. the password typed there unlocks the keyring through
+`/etc/pam.d/hyprlock`, which includes `/etc/pam.d/login`. tty2 and up still
+show the banner and ask for the password.
+
+if the lock won't let me in: ctrl+alt+f2, log in, and turn the autologin
+off.
+
+```sh
+sudo rm -r /etc/systemd/system/getty@tty1.service.d
+sudo systemctl daemon-reload
+```
+
+then reboot, and tty1 asks for the password again. if hyprlock died, its
+lock-died screen covers the desktop, and a reboot from tty2 brings a fresh
+lock.
+
+to undo the whole thing, turn the autologin off first, then revert the
+dotfiles. the other order leaves a boot that logs in with no lock.
+
 ## proton builds
 
 protonplus keeps the proton builds current from a user timer, hourly.

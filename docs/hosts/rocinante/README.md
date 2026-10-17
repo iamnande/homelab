@@ -45,6 +45,9 @@ arch meets it today.
   containers, plus the language servers the editor is configured for.
 - **one identity, held in the password manager.** it is the only ssh agent: it
   signs commits and answers for ssh keys. no private key sits on disk.
+- **the lock screen is the login.** the console logs in by itself at boot,
+  and the session comes up behind the lock. the password typed there is the
+  one that opens the secret store. no login manager.
 - **remote logins by key only.**
 - **an upgrade that can be undone.** the os is rolling, and the kernel and the
   graphics driver often move together. the root is snapshotted before every
