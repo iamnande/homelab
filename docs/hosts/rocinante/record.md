@@ -148,6 +148,18 @@ two things worth keeping from these rows:
   dropped, and the interval has nothing to count from. the timer is dead for
   that boot.
 
+## the console greeter, 10-16
+
+the lock screen is the login now: tty1 logs in by itself, and hyprland starts
+hyprlock first.
+
+| # | when | what | how |
+| --- | --- | --- | --- |
+| 51 | 10-16 23:26 to 23:29 | the boot lock, the lock's new look, and a power menu with no log out | the dotfiles main clone pulled to `4f9f6e2`. the pull's autostash rewrote `hyprland.lua`, and hyprland reloaded while it was missing, so `hyprctl reload` |
+| 52 | 10-16 23:41 | tty1 logs in by itself, and the banner says `legitimate salvage` | `bin/apply` from the greeter's worktree installed the `getty@tty1` autologin drop-in, `/etc/issue` and `/etc/pam.d/login` (a comment, no pam change), then `daemon-reload`. row 51 came first, so no boot ever logged in without the lock |
+| 53 | 10-16 23:41 | hyprshutdown removed | `pacman -Rns hyprshutdown`. log out was its only caller. `hyprtoolkit` stays for hyprpaper, hyprpolkitagent and hyprland-guiutils |
+| 54 | 10-16 23:49 | 1password waits for the boot lock | the dotfiles main clone pulled to `cf9407a`, and `hyprctl reload` again. on the first boot under row 52, 1password asked the still-locked keyring 3s after the login, and the keyring's prompt waited under the lock for a second password. takes effect at the next boot |
+
 ## checked, and not
 
 | when | what |
@@ -159,6 +171,16 @@ two things worth keeping from these rows:
 | 10-10 | variable refresh over hdmi: not available. the driver reports the output as `vrr_capable: 0`, and the monitor's edid offers it there as freesync (48 to 240hz), not as hdmi 2.1 vrr |
 | 10-11 | after the merge, from the main clone: `bin/drift` exits 0, and the resolve gives 113 names, 841 packages, every file present in the repo |
 | 10-11 | after a logout and login, 1password's icon is in the tray and the journal shows one start |
-| never | shut down from the power menu. lock, sleep, log out and reboot all work |
+| 10-16 | after rows 52 and 53: `bin/drift` exits 0, and pacman has no hyprshutdown |
+| 10-16 | the first boot under the autologin: the lock is the first thing drawn. the journal shows login's pam couldn't unlock the keyring and hyprlock's did, the keyring reads unlocked, and 1password asked for no code |
+| 10-16 | tty2 shows `rocinante` / `legitimate salvage` and asks for a password |
+| 10-17 | super+l shows the same look and asks right away. hyprlock 0.9.6 has no grace setting, so the idle lock never had one |
+| 10-17 | sleep from the menu wakes to the lock, half faded in over the desktop for a moment |
+| 10-17 | the power menu offers lock, sleep, reboot and shut down |
+| 10-17 | a signed commit after the unlock: this one |
+| never | shut down from the power menu. lock, sleep and reboot all work |
 | never | the [build](build.md) chapter end to end, from the iso |
 | never | a [rollback](operate.md#rolling-back) to a snapshot |
+| never | row 54 at a boot: one password, and no keyring prompt after it |
+| never | a hyprlock killed at the boot lock: the desktop should stay covered, and tty2 is the way in |
+| never | a wrong password before the first unlock of a boot |
