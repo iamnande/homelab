@@ -3,7 +3,6 @@ hyprland                     # the compositor (dotfiles: hypr)
 hyprpaper                    # wallpaper (dotfiles: hypr)
 hyprlock                     # lock screen (dotfiles: hypr)
 hypridle                     # idle lock and screen off (dotfiles: hypr)
-hyprshutdown                 # closes apps before the session exits (dotfiles: hypr)
 hyprpolkitagent              # password prompts for polkit (user-units.txt)
 gnome-keyring                # secret store, so 1password can remember this host
 uwsm                         # starts the session from tty1 (dotfiles: fish)
