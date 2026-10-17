@@ -22,7 +22,7 @@ playerctl                    # media keys (dotfiles: hypr)
 wl-clipboard                 # clipboard for helix and screenshots
 grim                         # screenshots (dotfiles: bin)
 slurp                        # region select for screenshots (dotfiles: bin)
-noto-fonts                   # the base font (dotfiles: hypr)
+noto-fonts                   # the base font
 noto-fonts-emoji             # emoji
 noto-fonts-cjk               # chinese, japanese and korean text
-otf-opendyslexic-nerd        # the font in the terminal, the bar and the launcher
+otf-opendyslexic-nerd        # the font in the terminal, the bar, the launcher and the lock
