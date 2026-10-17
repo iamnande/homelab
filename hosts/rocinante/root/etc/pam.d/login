@@ -2,6 +2,8 @@
 
 auth       requisite    pam_nologin.so
 auth       include      system-local-login
+# hyprlock unlocks the keyring through this line too: /etc/pam.d/hyprlock
+# includes this file, and under the tty1 autologin it is the only unlock
 auth       optional     pam_gnome_keyring.so
 account    include      system-local-login
 session    include      system-local-login
