@@ -17,10 +17,11 @@ go-tools              # the golang.org/x/tools binaries
 gopls                 # go language server (dotfiles: helix)
 golangci-lint         # go linter
 rustup                # rust toolchain, and rust-analyzer (dotfiles: helix)
-nodejs                # node (dotfiles: bin)
+nodejs-lts-jod        # node 22 lts, what bitwarden-cli needs. mise for anything newer
 pnpm                  # node packages
 prettier              # formatter (dotfiles: helix)
 yaml-language-server  # yaml (dotfiles: helix)
+bitwarden-cli         # bw, the vault from the terminal
 marksman              # markdown language server, helix's default
 buf                   # protobuf (dotfiles: helix)
 kubectl               # kubernetes cli (dotfiles: fish)

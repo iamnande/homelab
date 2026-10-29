@@ -188,13 +188,11 @@ make fisher
 
 if step 2 used the mirrors, yay has to be built by hand before `apply` can
 build the rest of `aur.txt`. the first line stops makepkg from building a
-`-debug` package beside it, and the second fetches the key 1password's build
-is checked against.
+`-debug` package beside it.
 
 ```sh
 cd ~/src/iamnande/homelab
 install -D -m 644 hosts/rocinante/home/.config/pacman/makepkg.conf ~/.config/pacman/makepkg.conf
-curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --import
 git clone https://aur.archlinux.org/yay.git vendor/yay
 cd vendor/yay
 makepkg -si
@@ -210,8 +208,8 @@ bin/apply
 
 ## 6. identity
 
-open 1password, sign in, and turn on the ssh agent under settings, developer.
-`ls -l ~/.1password/agent.sock` then shows a socket, and the fish config
+open bitwarden, log in, and turn on the ssh agent in its settings.
+`ls -l ~/.bitwarden-ssh-agent.sock` then shows a socket, and the fish config
 points `SSH_AUTH_SOCK` at it.
 
 **new disk:** git signs with `~/.ssh/iamnande.pub`, which is not in the

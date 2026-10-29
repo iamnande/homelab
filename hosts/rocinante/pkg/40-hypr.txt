@@ -4,7 +4,8 @@ hyprpaper                    # wallpaper (dotfiles: hypr)
 hyprlock                     # lock screen (dotfiles: hypr)
 hypridle                     # idle lock and screen off (dotfiles: hypr)
 hyprpolkitagent              # password prompts for polkit (user-units.txt)
-gnome-keyring                # secret store, so 1password can remember this host
+gnome-keyring                # secret store, for bitwarden and gh
+bitwarden                    # passwords, and the ssh agent that holds the git and ssh keys
 uwsm                         # starts the session from tty1 (dotfiles: fish)
 xdg-desktop-portal-hyprland  # screen sharing and file pickers
 qt5-wayland                  # qt5 apps on wayland

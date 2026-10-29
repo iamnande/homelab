@@ -160,6 +160,19 @@ hyprlock first.
 | 53 | 10-16 23:41 | hyprshutdown removed | `pacman -Rns hyprshutdown`. log out was its only caller. `hyprtoolkit` stays for hyprpaper, hyprpolkitagent and hyprland-guiutils |
 | 54 | 10-16 23:49 | 1password waits for the boot lock | the dotfiles main clone pulled to `cf9407a`, and `hyprctl reload` again. on the first boot under row 52, 1password asked the still-locked keyring 3s after the login, and the keyring's prompt waited under the lock for a second password. takes effect at the next boot |
 
+## the secrets decoupling, 10-25 to 10-26
+
+1password's jobs move out one at a time, to bitwarden. both run side by side
+until the last one moves.
+
+| # | when | what | how |
+| --- | --- | --- | --- |
+| 55 | 10-25 23:17 | bitwarden's desktop app, next to 1password | `pacman -S bitwarden` by hand, then its line in `pkg/40-hypr.txt` |
+| 56 | 10-26 13:04 | ssh and git signing through bitwarden | the keys into bitwarden, its ssh agent on, the dotfiles main clone at `f94abcc`: `~/.ssh/config` and the fish config point at `~/.bitwarden-ssh-agent.sock`, and bitwarden's own autostart is masked |
+| 57 | 10-26 13:12 | 1password out of the login | the dotfiles main clone at `166ab59`: hyprland starts bitwarden alone, and 1password's autostart mask is gone. takes effect at the next login |
+| 58 | 10-26 13:23 | 1password removed | `pacman -Rns 1password 1password-cli`. then by hand: its autostart entry, the dangling mask link, `~/.1password`, `~/.config/1Password`, firefox's native messaging host, its token in the keyring, `vendor/1password`, the yay build caches. `bin/mkrepo` dropped both from the offline repo |
+| 59 | 10-26 21:03 | bitwarden's cli, on node 22 lts | `pacman -S nodejs-lts-jod bitwarden-cli`: arch's `bitwarden-cli` needs the lts, so `nodejs` 26 went. the lts provides `nodejs`, so prettier, yaml-language-server and pnpm kept working. then the two lines in `pkg/50-dev.txt` |
+
 ## checked, and not
 
 | when | what |
@@ -178,6 +191,8 @@ hyprlock first.
 | 10-17 | sleep from the menu wakes to the lock, half faded in over the desktop for a moment |
 | 10-17 | the power menu offers lock, sleep, reboot and shut down |
 | 10-17 | a signed commit after the unlock: this one |
+| 10-26 | `ssh -T git@github.com` and a signed commit, each after bitwarden's prompt |
+| 10-26 | after row 58: `bin/drift` exits 0 from the worktree |
 | never | shut down from the power menu. lock, sleep and reboot all work |
 | never | the [build](build.md) chapter end to end, from the iso |
 | never | a [rollback](operate.md#rolling-back) to a snapshot |
