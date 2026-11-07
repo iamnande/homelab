@@ -87,7 +87,7 @@ tunnel until it's proven, and the kill switch goes on last.
 8. **kill switch.** turn it on in `all-via-proton`. run test 5. (R5)
 9. **leaks.** tests 6 and 7. if v6 leaks, turn ipv6 off on the vpn-routed
    vlans. (R6)
-10. **soak.** a day of normal use: streaming, video calls, the game console.
+10. **soak.** a day of normal use: streaming, video calls, the switch 2.
 11. **clean up.** delete `Proton VPN - Canada` and `Proton VPN - US`. (R6)
 12. **the book.** reword `network.md:17` and `network.md:116`. (R7)
 
@@ -145,7 +145,7 @@ manual. each is a paste-back or a screenshot from nick.
 | 5 | home device, tunnel disabled | `curl -s -m 10 https://ipinfo.io` | times out. work and the apple tv still work. re-enable after |
 | 6 | home device | `curl -s -6 -m 10 https://ifconfig.co` | fails, or shows a proton v6 address. never the isp's |
 | 7 | home device | a dns leak test (e.g. dnsleaktest.com, extended) | controld resolvers only |
-| 8 | game console | an online match | plays. note latency and nat type |
+| 8 | switch 2 | an online match | plays. note latency and nat type |
 
 ## Rollout Plan
 
@@ -171,7 +171,8 @@ to today's state in seconds, and the tunnel and the apple tv route can stay.
 | does the gateway's own traffic need the tunnel | no. it talks to ubiquiti and controld over doh, and the isp learns nothing from that it doesn't already know |
 | does the apple tv leak anything | its destinations, to the isp. accepted. dns stays hidden via controld, and vlan 40 keeps it away from everything else |
 | how the apple tv beats the vlan 40 match | route order, checked in step 7. fallback: ip ranges around its ip |
-| guests on vlan 60 | through the tunnel. their streaming can hit the same block. accepted |
+| guests on vlan 60 | through the tunnel. their streaming can hit the same block. accepted: guests don't get streaming |
+| the switch 2 | on home (vlan 20), through the tunnel. test 8 decides. if online play suffers, a by-device exception like the apple tv |
 | when the openvpn clients go | after the soak, not before |
 
 ## Requirements Coverage

@@ -106,9 +106,10 @@ N/A: no software surface. the change is gateway settings and one book page.
 - **another service blocks the proton exit ip.** handled per device, the same
   way as the apple tv, if it ever comes up. not handled now.
 - **guests on vlan 60.** go out the tunnel, so their streaming can hit the
-  same block. accepted: guests get the privacy default.
-- **game console.** if it's on a vpn-routed vlan, it goes out the tunnel, with
-  added latency and maybe strict nat. checked during verification.
+  same block. accepted: guests don't get streaming.
+- **the switch 2.** it's on home (vlan 20), so it goes out the tunnel, with
+  added latency and maybe strict nat. checked during verification. if online
+  play suffers, it gets a by-device exception like the apple tv.
 - **sector7's tunnel.** not handled, out of scope.
 
 ## Observability
