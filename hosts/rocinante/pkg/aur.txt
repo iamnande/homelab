@@ -1,4 +1,0 @@
-# foreign packages, built with yay.
-yay                           # aur helper. built by hand on a fresh install
-protonplus                    # installs and updates proton builds (home/.config/systemd/user)
-golangci-lint-langserver-bin  # go lint in the editor (dotfiles: helix)
