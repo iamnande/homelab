@@ -1,8 +1,0 @@
-#! /bin/sh
-set -e
-
-cat << EOF
-if [ "\$grub_platform" = "efi" ]; then
-  uki
-fi
-EOF
