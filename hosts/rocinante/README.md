@@ -13,7 +13,7 @@ the tower. it plays games, and it is where i write code when i am at the desk.
 | network | wired, switch port 8, vlan 30 (lab). no wifi and no bluetooth radio |
 
 it runs arch linux with hyprland. before that it was the proxmox hypervisor
-listed under [retired](../README.md#retired).
+listed under [retired](../../docs/hosts/README.md#retired).
 
 | page | holds |
 | --- | --- |
