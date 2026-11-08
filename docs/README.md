@@ -13,7 +13,6 @@ policies, and observability.
 | [hosts](hosts/README.md) | the machines and what each one is for |
 | [deployment](deployment.md) | how a commit becomes the running site |
 | [roadmap](roadmap.md) | what does not exist yet |
-| plans | the plan docs behind each change, under `prds/` |
 
 ## terms
 
