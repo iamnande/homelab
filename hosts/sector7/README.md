@@ -14,7 +14,7 @@ site. it has no display: i reach it over ssh.
 this page is an inventory, taken on 2026-10-03, when the host still had a
 display. `bin/inventory` prints a fresh one. sector7 does not have a manifest
 or a record yet. giving it the same treatment as
-[rocinante](../rocinante/README.md) is on the [roadmap](../../roadmap.md).
+[rocinante](../rocinante/README.md) is on the [roadmap](../../docs/roadmap.md).
 
 ## spec
 
@@ -60,7 +60,7 @@ the desktop packages are still installed and no longer used. hyprland there is
 one release behind rocinante. the dotfiles' config is lua now, which 0.56
 loads, so it has to reach 0.56 before anyone logs in at its console.
 
-how a commit gets to the cluster is on the [deployment](../../deployment.md)
+how a commit gets to the cluster is on the [deployment](../../docs/deployment.md)
 page.
 
 ## name

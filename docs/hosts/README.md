@@ -4,8 +4,8 @@ a host is a physical machine with a name.
 
 | host | hardware | what it is for |
 | --- | --- | --- |
-| [rocinante](rocinante/README.md) | tower. ryzen 9 5900x, rtx 4070 super, 32G | gaming and development |
-| [sector7](sector7/README.md) | nuc. gmktec nucbox g10 pro, ryzen 5 3500u | devbox, and a small k3s cluster |
+| [rocinante](../../hosts/rocinante/README.md) | tower. ryzen 9 5900x, rtx 4070 super, 32G | gaming and development |
+| [sector7](../../hosts/sector7/README.md) | nuc. gmktec nucbox g10 pro, ryzen 5 3500u | devbox, and a small k3s cluster |
 
 both run arch linux. rocinante is the desktop. sector7 has no display and is
 reached over ssh.

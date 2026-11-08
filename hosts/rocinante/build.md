@@ -271,4 +271,4 @@ sudo btrfs subvolume delete -R /mnt/top/@old
 sudo umount /mnt/top
 ```
 
-to read the book on the box, see [reading it](../../README.md#reading-it).
+to read the book on the box, see [reading it](../../docs/README.md#reading-it).
