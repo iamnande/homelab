@@ -50,8 +50,8 @@ the network is the unsung hero and backbone of the homelab. it does not use its 
 
 * 🌐 **encrypted, split-horizon dns:** distinct internal vs external resolution allows for friendly private names like `gateway.morethq.com` to resolve on trusted devices within the network, without exposing them to the internet. public services resolve via [controld](https://controld.com/) using dns-over-https (doh).
 
-* 🕵️‍♂️ **vpn for outbound traffic:** all traffic leaving the lab routes through
-proton vpn to preserve privacy.
+* 🕵️‍♂️ **vpn protected egress:** traffic leaving the home routes through
+proton vpn, with an exception route policy by device or network only as needed.
 
 * 🏗️ **practical at-scale patterns at home:** over-segmentation, strict fire-walling, and comprehensive tls coverage give me a (relatively) safe and realistic playground to sniff paint and eat glue without risking vital data & services.
 
@@ -79,31 +79,12 @@ graph TD
 
     internet --> modem --> gateway --> switch
 
-    %% --- downstairs ---
-    subgraph downstairs
-        ap_down["u6 in-wall<br/>(downstairs ap)"]
-        client_d1["smart tv"]
-        client_d2["game console"]
-        client_d3["iot devices"]
-    end
+    %% --- access points ---
+    ap_down["u6 in-wall<br/>(downstairs ap)"]
+    ap_up["u6 in-wall<br/>(upstairs ap)"]
 
     switch --> ap_down
-    ap_down -.-> client_d1
-    ap_down -.-> client_d2
-    ap_down -.-> client_d3
-
-    %% --- upstairs ---
-    subgraph upstairs
-        ap_up["u6 in-wall<br/>(upstairs ap)"]
-        client_u1["laptop / workstation"]
-        client_u2["phone / tablet"]
-        client_u3["iot hub"]
-    end
-
     switch --> ap_up
-    ap_up -.-> client_u1
-    ap_up -.-> client_u2
-    ap_up -.-> client_u3
 
     %% --- lab ---
     subgraph lab["lab (vlan 30)"]
@@ -111,10 +92,6 @@ graph TD
     end
 
     switch --> rocinante
-
-    %% --- Legend ---
-    classDef wired stroke-width:2px,stroke:#333;
-    classDef wireless stroke-dasharray:5 5,stroke:#999;
 ```
 </details>
 
@@ -122,19 +99,18 @@ graph TD
 
 ### segmentation
 
-the network is segmented into 6 trust zones, with a default of deny. there are
-currently 7 vlans, each with their own subnet.
+the network is segmented into 4 high-level trust zones, with a default-deny route policy across networks.
+
+there are 7 vlans, each with their own subnet and scope.
 
 zones:
 
-| zone       | associated vlans      | description                            |
-| ---------- | --------------------- | -------------------------------------- |
-| internal   | 1, 20, 30, 40, 50, 70 | trusted internal networks              |
-| external   | wan 1, wan 2, vpn-xx  | internet uplinks and vpn clients       |
-| gateway    | gateway               | gateway; enforces firewall rules       |
-| vpn        | tbd                   | vpn servers; encrypted inbound traffic |
-| hotspot    | 60                    | guest wi-fi; internet-only access      |
-| dmz        | tbd                   | future public zone; extreme isolation  |
+| zone     | members                     | description                        |
+| -------- | --------------------------- | ---------------------------------- |
+| internal | vlans 1, 20, 30, 40, 50, 70 | internal networks                  |
+| external | MHQ Comcast (wan1), proton  | the internet uplink and vpn client |
+| gateway  | gateway                     | gateway; enforces firewall rules   |
+| hotspot  | vlan 60                     | guest wi-fi; internet-only access  |
 
 vlans:
 
@@ -148,7 +124,7 @@ vlans:
 | 60   | guest      | 172.16.60.0/24 | guest wifi, internet-only, isolated    |
 | 70   | service    | 172.16.70.0/24 | internal production apps, media, sync  |
 
-* all outbound traffic goes through proton vpn via udp.
+* all egress traffic goes through proton over wireguard, except work (vlan 50). if/when the tunnel drops, traffic halts (kill switch) instead of egressing via the wan.
 * all dns queries go through controld via doh.
 * vlans 40 (iot), 50 (work), and 60 (guest) are strictly internet-only and are entirely isolated from any internal networks.
 * vlans 1 (mgmt), 20 (home), 30 (lab), and 70 (service) have internal routing
@@ -178,30 +154,16 @@ graph TD
         vlan_60["vlan 60: guest<br/>172.16.60.0/24"]
     end
 
-    %% --- vpn zone ---
-    subgraph vpn["vpn zone"]
-        vlan_80["vlan 80: vpn (planned)"]
-    end
-
     %% --- external zone ---
     subgraph external["external zone"]
-        wan1["wan 1"]
-        wan2["wan 2"]
-        vpn_us["vpn-us"]
-        vpn_xx["vpn-xx"]
-    end
-
-    %% --- dmz zone ---
-    subgraph dmz["dmz zone (planned)"]
-        dmz_net["dmz network"]
+        wan1["MHQ Comcast<br/>wan1"]
+        proton["proton us<br/>wireguard"]
     end
 
     %% --- gateway connections ---
     gateway --> internal
     gateway --> hotspot
-    gateway --> vpn
     gateway --> external
-    gateway --> dmz
 
     %% --- internet / dns ---
     internet["🌐 internet"]
@@ -214,7 +176,6 @@ graph TD
     vlan_50 --> doh
     vlan_60 --> doh
     vlan_70 --> doh
-    vlan_80 --> doh
     doh --> internet
 
 %% --- Isolation Notes ---
