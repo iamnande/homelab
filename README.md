@@ -124,8 +124,9 @@ vlans:
 | 60   | guest      | 172.16.60.0/24 | guest wifi, internet-only, isolated    |
 | 70   | service    | 172.16.70.0/24 | internal production apps, media, sync  |
 
-* all egress traffic goes through proton over wireguard, except work (vlan 50). if/when the tunnel drops, traffic halts (kill switch) instead of egressing via the wan.
+* all egress traffic goes through proton over wireguard, except management (vlan 1) and work (vlan 50). if/when the tunnel drops, traffic halts (kill switch) instead of egressing via the wan.
 * all dns queries go through controld via doh.
+* vpn client dns is routed via the gateway (`172.16.0.1`). unifi forces dns for routed clients to the wireguard conf's dns value, instead of through the encrypted dns (controld) set via CyberSecure.
 * vlans 40 (iot), 50 (work), and 60 (guest) are strictly internet-only and are entirely isolated from any internal networks.
 * vlans 1 (mgmt), 20 (home), 30 (lab), and 70 (service) have internal routing
 as needed.
