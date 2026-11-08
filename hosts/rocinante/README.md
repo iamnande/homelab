@@ -12,8 +12,7 @@ the tower. it plays games, and it is where i write code when i am at the desk.
 | display | aoc 27g2g8, 1080p at 240hz, on hdmi |
 | network | wired, switch port 8, vlan 30 (lab). no wifi and no bluetooth radio |
 
-it runs arch linux with hyprland. before that it was the proxmox hypervisor
-listed under [retired](../../docs/hosts/README.md#retired).
+it runs arch linux with hyprland. before that it was a proxmox hypervisor.
 
 | page | holds |
 | --- | --- |

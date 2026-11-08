@@ -270,5 +270,3 @@ sudo mount --mkdir -o subvolid=5 /dev/nvme0n1p2 /mnt/top
 sudo btrfs subvolume delete -R /mnt/top/@old
 sudo umount /mnt/top
 ```
-
-to read the book on the box, see [reading it](../../docs/README.md#reading-it).
